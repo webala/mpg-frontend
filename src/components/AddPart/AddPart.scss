@@ -1,0 +1,48 @@
+.add-part {
+    form {
+        .compartible-cars {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            h2 {
+                margin-bottom: 20px;
+            }
+
+            .search {
+                border-bottom: 1px solid black;
+                margin-bottom: 20px;
+                display: flex;
+                flex-direction: row-reverse;
+                align-items: center;
+
+                input:focus {
+                    outline: none;
+                }
+            }
+
+            
+            .cars {
+                .field {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 250px;
+
+                    .label {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+
+                        font-size: 10px;
+                    }
+
+                    input {
+                        height: 15px;
+                    }
+                }
+            }
+        }
+    }
+}

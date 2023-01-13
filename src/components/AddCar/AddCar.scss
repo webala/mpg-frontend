@@ -1,0 +1,57 @@
+.add-car, .add-part {
+	font-size: 12px;
+	.heading {
+		font-size: 24px;
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+
+		.field {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			width: 300px;
+			margin-bottom: 15px;
+
+			input {
+				height: 30px;
+				width: 200px;
+				border: 1px solid black;
+				padding: 0 5px;
+
+				@media (min-width: 768px) {
+					width: 400px;
+				}
+			}
+
+			input:focus {
+				outline: none;
+			}
+
+			.year {
+				display: flex;
+				gap: 5px;
+				align-items: center;
+
+				input {
+					width: 70px;
+
+					@media (min-width: 768px) {
+						width: 100px;
+					}
+				}
+			}
+		}
+
+		.submit-btn {
+			button {
+				background: black;
+				color: white;
+				padding: 5px;
+			}
+		}
+	}
+}
