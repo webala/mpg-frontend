@@ -14,7 +14,10 @@
                 margin-bottom: 20px;
                 display: flex;
                 flex-direction: row-reverse;
+                justify-content: flex-end;
                 align-items: center;
+                width: 300px;
+                gap: 5px;
 
                 input:focus {
                     outline: none;
@@ -28,7 +31,7 @@
                     flex-direction: row;
                     align-items: center;
                     justify-content: space-between;
-                    width: 250px;
+                    width: 300px;
 
                     .label {
                         display: flex;

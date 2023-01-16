@@ -1,0 +1,14 @@
+.dashboard {
+   
+    width: 100vw;
+    
+    .cars, .parts {
+        display: flex;
+        flex-direction: column;
+
+        @media (min-width: 1000px) {
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+    }
+}
