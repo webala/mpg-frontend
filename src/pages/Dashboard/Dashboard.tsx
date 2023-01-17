@@ -22,18 +22,7 @@ function Dashboard() {
 
 	
 
-	const fetchParts = async () => {
-		try {
-			const response = await fetch("http://localhost:8000/api/parts/");
-
-			const jsonRes = await response.json();
-			console.log("parts: ", jsonRes);
-
-			setParts(jsonRes);
-		} catch (error) {
-			console.log("error: ", error);
-		}
-	};
+	
 
 	useEffect(() => {
 		// fetchCars();
@@ -49,7 +38,7 @@ function Dashboard() {
 			</div>
 			<div className="parts">
 				<AddPart cars={cars} />
-				{/* <Parts parts={parts}/> */}
+				<Parts />
 			</div>
 		</div>
 	);
