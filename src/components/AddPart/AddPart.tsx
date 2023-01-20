@@ -11,10 +11,11 @@ interface iAddPart {
 function AddPart({ cars }: iAddPart) {
 	const [partNo, setPartNo] = useState<string>();
 	const [selectedCars, setSelectedCars] = useState<iCar[]>([]);
-	const [category, setCategory] = useState<string>()
-	const [inventory, setInventory] = useState<number>()
+	const [category, setCategory] = useState<string>();
+	const [inventory, setInventory] = useState<number>();
 	// const [partImg, setPartImg] = useState<File>()
 	const [searchResults, setSearchResults] = useState<iCar[]>([]);
+	const [name, setName] = useState<string>()
 
 	const searchCar = (value: string): void => {
 		const length = value.length;
@@ -29,18 +30,18 @@ function AddPart({ cars }: iAddPart) {
 	const addPart = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const data = {
-			part_no: partNo, 
+			part_no: partNo,
 			cars: selectedCars,
-			category: category
-		}
-
-
+			category: category,
+			name,
+			inventory
+		};
 
 		try {
 			const response = await fetch("http://localhost:8000/api/parts/", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(data),
 			});
@@ -55,6 +56,15 @@ function AddPart({ cars }: iAddPart) {
 		<div className="add-part">
 			<h1 className="heading">Add part</h1>
 			<form onSubmit={addPart}>
+				<div className="field">
+					<label htmlFor="make">Part name</label>
+					<input
+						type="text"
+						onChange={(e) => setName(e.target.value)}
+						value={name}
+						required
+					/>
+				</div>
 				<div className="field">
 					<label htmlFor="make">Part number</label>
 					<input
@@ -119,7 +129,6 @@ function AddPart({ cars }: iAddPart) {
 								onChange={(e) => setCategory(e.target.value)}
 								value={`OTHER`}
 								name="category"
-								
 							/>
 						</div>
 					</div>
