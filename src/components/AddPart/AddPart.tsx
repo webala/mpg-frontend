@@ -11,6 +11,9 @@ interface iAddPart {
 function AddPart({ cars }: iAddPart) {
 	const [partNo, setPartNo] = useState<string>();
 	const [selectedCars, setSelectedCars] = useState<iCar[]>([]);
+	const [category, setCategory] = useState<string>()
+	const [inventory, setInventory] = useState<number>()
+	// const [partImg, setPartImg] = useState<File>()
 	const [searchResults, setSearchResults] = useState<iCar[]>([]);
 
 	const searchCar = (value: string): void => {
@@ -26,15 +29,18 @@ function AddPart({ cars }: iAddPart) {
 	const addPart = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const data = {
-			part_no: partNo,
+			part_no: partNo, 
 			cars: selectedCars,
-		};
+			category: category
+		}
+
+
 
 		try {
 			const response = await fetch("http://localhost:8000/api/parts/", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
 				body: JSON.stringify(data),
 			});
@@ -57,6 +63,66 @@ function AddPart({ cars }: iAddPart) {
 						value={partNo}
 						required
 					/>
+				</div>
+				<div className="field">
+					<label htmlFor="make">Inventory</label>
+					<input
+						type="number"
+						onChange={(e) => setInventory(parseInt(e.target.value))}
+						required
+					/>
+				</div>
+				<div className="field">
+					<label htmlFor="make">Select a category</label>
+					<div className="categories">
+						<div className="category">
+							<label htmlFor="brakes">Brakes</label>
+							<input
+								type="radio"
+								onChange={(e) => setCategory(e.target.value)}
+								value={`BRAKES`}
+								name="category"
+								required
+							/>
+						</div>
+						<div className="category">
+							<label htmlFor="brakes">Window</label>
+							<input
+								type="radio"
+								onChange={(e) => setCategory(e.target.value)}
+								value={`WINDOW`}
+								name="category"
+							/>
+						</div>
+						<div className="category">
+							<label htmlFor="brakes">Gearbox</label>
+							<input
+								type="radio"
+								onChange={(e) => setCategory(e.target.value)}
+								value={`GEARBOX`}
+								name="category"
+							/>
+						</div>
+						<div className="category">
+							<label htmlFor="brakes">Door</label>
+							<input
+								type="radio"
+								onChange={(e) => setCategory(e.target.value)}
+								value={`DOOR`}
+								name="category"
+							/>
+						</div>
+						<div className="category">
+							<label htmlFor="brakes">Other</label>
+							<input
+								type="radio"
+								onChange={(e) => setCategory(e.target.value)}
+								value={`OTHER`}
+								name="category"
+								
+							/>
+						</div>
+					</div>
 				</div>
 
 				<div className="compartible-cars">

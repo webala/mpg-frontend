@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./AddCar.scss";
+import { useQueryClient, useMutation } from "react-query";
 
 function AddCar() {
 	const [make, setMake] = useState<string>("");
@@ -32,8 +33,19 @@ function AddCar() {
 
         const jsonData = await response.json()
         console.log('response: ', jsonData)
+		// return jsonData
         
 	};
+
+
+	const queryClient = useQueryClient()
+
+	const mutation = useMutation(addCar, {
+		onSuccess: () => {
+			queryClient.invalidateQueries('cars')
+		}
+	})
+
 	return (
 		<div className="add-car">
 			<h1 className="heading">Add car</h1>

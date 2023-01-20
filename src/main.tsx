@@ -6,11 +6,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Home from "./pages/Home/Home";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <App />,
+		element: <Home />,
 	},
 	{
 		path: "/dashboard",
