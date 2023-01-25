@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./AddCar.scss";
 import { useQueryClient, useMutation } from "react-query";
+import { useToast } from "@chakra-ui/react";
 
 function AddCar() {
 	const [make, setMake] = useState<string>("");
@@ -11,40 +12,57 @@ function AddCar() {
 	const [bodyType, setBodyType] = useState<string>("");
 	const [engine, setEngine] = useState<string>("");
 
+	const toast = useToast();
+	const queryClient = useQueryClient();
+
+	const addCarMutation = useMutation(
+		(data) =>
+			fetch("http://localhost:8000/api/cars/", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			}),
+		{
+			onSuccess: () => {
+				toast({
+					title: "Success.",
+					description: "New car added.",
+					status: "success",
+					duration: 9000,
+					isClosable: true,
+					position: "bottom-right",
+				});
+				queryClient.invalidateQueries("posts");
+			},
+			onError: () => {
+				toast({
+					title: "Error.",
+					description: "Failed add car",
+					status: "error",
+					duration: 9000,
+					isClosable: true,
+					position: "bottom-right",
+				});
+			},
+		}
+	);
+
 	const addCar = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		
-        const data = {
-            make,
-            series,
-            model,
-            year: `${fromYear}-${toYear}`,
-            body_type: bodyType,
-            engine
-        }
 
-        const response = await fetch('http://localhost:8000/api/cars/', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data)
-        })
+		const data = {
+			make,
+			series,
+			model,
+			year: `${fromYear}-${toYear}`,
+			body_type: bodyType,
+			engine,
+		};
 
-        const jsonData = await response.json()
-        console.log('response: ', jsonData)
-		// return jsonData
-        
+		addCarMutation.mutate(data);
 	};
-
-
-	const queryClient = useQueryClient()
-
-	const mutation = useMutation(addCar, {
-		onSuccess: () => {
-			queryClient.invalidateQueries('cars')
-		}
-	})
 
 	return (
 		<div className="add-car">
@@ -56,7 +74,7 @@ function AddCar() {
 						type="text"
 						onChange={(e) => setMake(e.target.value)}
 						value={make}
-                        required
+						required
 					/>
 				</div>
 				<div className="field">

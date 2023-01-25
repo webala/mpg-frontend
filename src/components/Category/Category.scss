@@ -1,4 +1,13 @@
 .category {
-    display: flex;
-    flex-direction: row;
+    margin-bottom: 20px;
+    padding: 0 20px;
+
+    h1 {
+        font-weight: 600;
+    }
+
+    .parts {
+        display: flex;
+        gap: 20px;
+    }
 }

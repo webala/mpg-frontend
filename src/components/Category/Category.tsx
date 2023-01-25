@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import Part from "../Part/Part";
-import "./Category.scss"
+import "./Category.scss";
 
 function Category({ categoryName }) {
 	const fetchCategoryParts = async () => {
@@ -29,12 +29,16 @@ function Category({ categoryName }) {
 		console.log("error: ", error);
 		return <p>Something went wron</p>;
 	}
-	console.log("data: ", data);
+	
 	return (
 		<div className="category">
-			{data.map((item, index) => {
-				return <Part part={item} key={index} />;
-			})}
+			<h1>{categoryName}</h1>
+
+			<div className="parts">
+				{data.map((item, index) => {
+					return <Part part={item} key={index} />;
+				})}
+			</div>
 		</div>
 	);
 }

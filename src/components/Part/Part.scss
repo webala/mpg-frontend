@@ -1,5 +1,22 @@
 .part {
+
+    border: 1px solid black;
+    width: 250px;
+    padding: 5px;
     img {
-        width: 300px;
+        width: 90%;
+    }
+    
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid black;
+        padding: 5px;
+
+        .add-to-cart {
+            cursor: pointer;
+            
+        }
     }
 }

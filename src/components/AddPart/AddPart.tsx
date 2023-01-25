@@ -3,6 +3,8 @@ import { iCar } from "../../pages/Dashboard/Dashboard";
 import "./AddPart.scss";
 import "../AddCar/AddCar.scss";
 import { BsSearch } from "react-icons/bs";
+import { useMutation, useQueryClient } from "react-query";
+import { useToast } from "@chakra-ui/react";
 
 interface iAddPart {
 	cars: iCar[];
@@ -15,7 +17,44 @@ function AddPart({ cars }: iAddPart) {
 	const [inventory, setInventory] = useState<number>();
 	// const [partImg, setPartImg] = useState<File>()
 	const [searchResults, setSearchResults] = useState<iCar[]>([]);
-	const [name, setName] = useState<string>()
+	const [name, setName] = useState<string>();
+	
+
+	const toast = useToast()
+	const queryClent = useQueryClient();
+
+	const addPartMutation = useMutation((data) =>
+		fetch("http://localhost:8000/api/parts/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		}),
+		{
+			onSuccess: () => {
+				toast({
+					title: "Success.",
+					description: "New part added.",
+					status: "success",
+					duration: 9000,
+					isClosable: true,
+					position: "bottom-right",
+				});
+				queryClent.invalidateQueries('posts')
+			},
+			onError: () => {
+				toast({
+					title: "Error.",
+					description: "Failed add part",
+					status: "error",
+					duration: 9000,
+					isClosable: true,
+					position: "bottom-right",
+				});
+			}
+		}
+	);
 
 	const searchCar = (value: string): void => {
 		const length = value.length;
@@ -34,23 +73,10 @@ function AddPart({ cars }: iAddPart) {
 			cars: selectedCars,
 			category: category,
 			name,
-			inventory
+			inventory,
 		};
 
-		try {
-			const response = await fetch("http://localhost:8000/api/parts/", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			});
-
-			const jsonRes = await response.json();
-			console.log("part: ", jsonRes);
-		} catch (error) {
-			console.log("error: ", error);
-		}
+		addPartMutation.mutate(data)
 	};
 	return (
 		<div className="add-part">
