@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import Part from "../Part/Part";
 import "./Category.scss";
 
-function Category({ categoryName }) {
+function Category({setCart, categoryName }) {
 	const fetchCategoryParts = async () => {
 		const response = await fetch(
 			`http://localhost:8000/api/parts/${categoryName}`
@@ -36,7 +36,7 @@ function Category({ categoryName }) {
 
 			<div className="parts">
 				{data.map((item, index) => {
-					return <Part part={item} key={index} />;
+					return <Part setCart={setCart} part={item} key={index} />;
 				})}
 			</div>
 		</div>
