@@ -7,6 +7,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "./pages/Home/Home";
+import Payment from "./pages/Payment/Payment";
 
 const router = createBrowserRouter([
 	{
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
 	{
 		path: "/dashboard",
 		element: <Dashboard />,
+	},
+	{
+		path: "/payment",
+		element: <Payment />,
 	},
 ]);
 

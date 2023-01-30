@@ -21,18 +21,19 @@ export function getCookie(name: string) {
 
 let cart = JSON.parse(getCookie('cart'))
 
-
+let expires = new Date()
+expires.setTime(expires.getTime() + (30 * 24 * 60 * 60 * 1000))
 
 
 if (cart == undefined) {
     cart = {}
-    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+    document.cookie = 'cart=' + JSON.stringify(cart) + `;expires=${expires};domain=;path=/`;
     // cart = JSON.parse(getCookie('cart'))
 }
 
 function deleteCartCookies() {
     cart = {}
-    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+    document.cookie = 'cart=' + JSON.stringify(cart) + `;expires=${expires};domain=;path=/`;
     console.log('cart: ', cart)
 }
 
@@ -63,9 +64,7 @@ export const modifyCartCookie = (action: string, productId: number) => {
 
     }
 
-
-    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
-
+    document.cookie = 'cart=' + JSON.stringify(cart) + `;expires=${expires};domain=;path=/`;
 
 }
 

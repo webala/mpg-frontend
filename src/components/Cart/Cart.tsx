@@ -17,10 +17,10 @@ import Process from "../Process/Process";
 interface iCart {}
 function Cart({ cart, setCart, isOpen, onClose }) {
 	const btnRef = React.useRef();
-
-	
+	const [cartItems, setCartItems] = useState([]);
 
 	let partIds = Object.keys(cart);
+	console.log('cart items: ', cartItems)
 
 	return (
 		<>
@@ -38,10 +38,16 @@ function Cart({ cart, setCart, isOpen, onClose }) {
 					<DrawerBody>
 						<div className="cart">
 							{partIds.map((id, index) => (
-								<CartItem setCart={setCart} id={id} quantity={cart[id].quantity} />
+								<CartItem
+									key={index}
+									setCartItems={setCartItems}
+									setCart={setCart}
+									id={id}
+									quantity={cart[id].quantity}
+								/>
 							))}
 						</div>
-						<Process />
+						<Process cart={cart}/>
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>

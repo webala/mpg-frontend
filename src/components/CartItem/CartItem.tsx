@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import placeholder from "../../assets/placeholder.png";
 import {
@@ -8,7 +8,7 @@ import {
 import "./CartItem.scss";
 import { getCookie, modifyCartCookie } from "../../cart";
 
-function CartItem({setCart, id, quantity }) {
+function CartItem({setCartItems, setCart, id, quantity }) {
 	const [qtity, setQtity] = useState(quantity);
 	const fetchPart = async (id: number) => {
 		const response = await fetch(`http://localhost:8000/api/part/${id}`);
@@ -16,11 +16,12 @@ function CartItem({setCart, id, quantity }) {
 		if (!response.ok) {
 			throw Error("Something went wrong");
 		}
+		
 		const part = await response.json();
 		return part;
 	};
 
-	const { data, isLoading, isError, error } = useQuery(["part", id], () =>
+	const { data, isLoading, isError, error, isSuccess } = useQuery(["part", id], () =>
 		fetchPart(id)
 	);
 
@@ -32,15 +33,30 @@ function CartItem({setCart, id, quantity }) {
 		return <p>Something went wrong</p>;
 	}
 
+	// if (isSuccess) {
+	// 	setCartItems((items) => {
+	// 		const isPresent = items.find((item) => item.part.id == id)
+	// 		if (!isPresent) {
+	// 			return [...items, {part: data, quantity}]
+	// 		}
+	// 		return [...items]
+	// 	})
+	// }
+	// useEffect(() => {
+	// 	if (data) {
+	// 		
+	// 	}
+	// }, [])
+
+	// setCartItems((items) => [...items, { part: data, quantity }]);
+
 	const modifyCart = (id: number, action: string) => {
-		action === "remove" && qtity > 0
-			? setQtity(qtity - 1)
-			: setQtity(qtity + 1);
 		modifyCartCookie(action, id);
-		setCart(JSON.parse(getCookie("cart") as string))
+		setCart(JSON.parse(getCookie("cart") as string));
 	};
 
-	console.log("data: ", data);
+	
+	
 
 	return (
 		<div className="cart-item">
