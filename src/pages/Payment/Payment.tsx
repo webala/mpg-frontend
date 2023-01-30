@@ -5,7 +5,6 @@ import localforage from "localforage";
 import { useLocation } from "react-router-dom";
 import { useMutation } from "react-query";
 
-
 function Payment() {
 	let orderId = 1;
 	const [phoneNumber, setPhoneNumber] = useState<string>();
@@ -21,18 +20,42 @@ function Payment() {
 		return order;
 	};
 
-	const addOrderMutation = useMutation(async (data) => {
-		const response = await fetch(process.env.BACKEND_URL)
-		
-	})
+	const addOrderMutation = useMutation(
+		async (data) => {
+			const response = await fetch('http://localhost:8000/api/payment/mpesa', {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+
+			if (!response.ok) {
+				throw Error(response.statusText);
+			}
+
+			const jsonRes = await response.json();
+			return jsonRes;
+		},
+		{
+			onSuccess: (data) => {
+				console.log("success data: ", data);
+			},
+		}
+	);
 
 	const { data, isLoading, isError, error, isSuccess } = useQuery(
 		["order", orderId],
 		() => fetchOrder(orderId)
 	);
 
-	const handleMpesaPayment = async (e:React.SyntheticEvent) => {
-
+	const handleMpesaPayment = async (e: React.SyntheticEvent) => {
+		e.preventDefault()
+		const body = {
+			phone_number: "254791055897",
+			order_id: data?.id
+		}
+		addOrderMutation.mutate(body)
 	};
 
 	const handleCardPayment = async () => {};
