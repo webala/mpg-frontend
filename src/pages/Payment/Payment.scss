@@ -41,6 +41,10 @@
                 }
 
                 .submit {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    
                     button {
                         background: black;
                         color: white;
@@ -50,6 +54,12 @@
 
                     button:hover {
                         background: green;
+                    }
+
+                    .loader {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
                     }
                 }
             }

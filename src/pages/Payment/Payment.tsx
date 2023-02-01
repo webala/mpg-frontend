@@ -4,10 +4,14 @@ import "./Payment.scss";
 import localforage from "localforage";
 import { useLocation } from "react-router-dom";
 import { useMutation } from "react-query";
+import { Spinner } from "@chakra-ui/react";
+import AwaitTransaction from "../../components/AwaitTransaction/AwaitTransaction";
 
 function Payment() {
 	let orderId = 1;
 	const [phoneNumber, setPhoneNumber] = useState<string>();
+	const [transactionId, setTransactionId] = useState<number>();
+
 	// const { state } = useLocation();
 	// orderId = state.order_id;
 
@@ -22,7 +26,7 @@ function Payment() {
 
 	const addOrderMutation = useMutation(
 		async (data) => {
-			const response = await fetch('http://localhost:8000/api/payment/mpesa', {
+			const response = await fetch("http://localhost:8000/api/payment/mpesa", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -40,6 +44,7 @@ function Payment() {
 		{
 			onSuccess: (data) => {
 				console.log("success data: ", data);
+				setTransactionId(data.transaction_id);
 			},
 		}
 	);
@@ -50,12 +55,12 @@ function Payment() {
 	);
 
 	const handleMpesaPayment = async (e: React.SyntheticEvent) => {
-		e.preventDefault()
+		e.preventDefault();
 		const body = {
 			phone_number: "254791055897",
-			order_id: data?.id
-		}
-		addOrderMutation.mutate(body)
+			order_id: data?.id,
+		};
+		addOrderMutation.mutate(body);
 	};
 
 	const handleCardPayment = async () => {};
@@ -106,9 +111,18 @@ function Payment() {
 						</div>
 						<div className="submit">
 							<button>Pay</button>
+							{addOrderMutation.isLoading ? (
+								<div className="loader">
+									{" "}
+									<Spinner color="green.500" /> <p>Initiating transaction</p>
+								</div>
+							) : null}
 						</div>
 					</form>
 				</div>
+				{transactionId ? (
+					<AwaitTransaction transactionId={transactionId} />
+				) : null}
 				<div className="payment-method">
 					<h1 className="heading">Pay via card</h1>
 					<form onSubmit={handleCardPayment}>
