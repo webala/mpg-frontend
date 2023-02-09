@@ -16,7 +16,7 @@ function Process({ cart }) {
 	const [description, setDescription] = useState<string>();
 
 	const toast = useToast();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	const createOrderMutation = useMutation(
 		async (data) => {
@@ -47,7 +47,7 @@ function Process({ cart }) {
 					isClosable: true,
 					position: "bottom-right",
 				});
-				navigate("/payment", {state: {order_id: data.order_id}})
+				navigate("/payment", { state: { order_id: data.order_id } });
 			},
 		}
 	);
@@ -66,20 +66,21 @@ function Process({ cart }) {
 
 		const data = {
 			order_items,
-			client: {
-				first_name: firstName,
-				last_name: lastName,
-				phone_number: phoneNumber,
-				email,
-				is_subscribed: false,
-			},
 			shipping_address: {
 				location,
 				building,
 				house_number: houseNumber,
 				description,
+				client: {
+					first_name: firstName,
+					last_name: lastName,
+					phone_number: phoneNumber,
+					email,
+					is_subscribed: false,
+				},
 			},
 		};
+		console.log("order data: ", data);
 		createOrderMutation.mutate(data);
 	};
 

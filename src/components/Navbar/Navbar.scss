@@ -1,32 +1,116 @@
 .navbar {
     display: flex;
-    justify-content: space-between;
-    padding: 20px;
+    flex-direction: column;
+    padding: 10px;
+    font-size: 14px;
 
     @media (min-width: 768px) {
-        padding: 40px 150px;
+        font-size: 17px;
+        padding: 20px 70px;
     }
 
-    .logo {
-
+    .top {
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
+        color: white;
+        background: black;
+        padding: 5px;
+        border: 1px solid black;
 
-        h1 {
-            font-weight: 700;
-            font-size: 24px;
+        @media (min-width: 768px) {
+            padding: 10px 50px;
         }
 
-        img {
-            width: 70px;
-            border-radius: 50%;
+        .logo {
+            width: 30%;
+
+            @media (min-width: 768px) {
+                width: 100px;
+            }
+        }
+
+        .links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            @media (min-width: 768px) {
+                gap: 30px;
+            }
         }
     }
 
-    .nav-buttons {
-        .cart-icon {
-            font-size: 24px;
+    .bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid black;
+        position: relative;
+        padding: 5px;
+
+        @media (min-width: 768px) {
+            padding: 20px 70px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 5px;
+
+            @media (min-width: 768px) {
+                gap: 70px;
+                flex-direction: row;
+                .open-nav {
+                    display: none;
+                }
+            }
+
+            .nav-items {
+                display: none;
+
+
+                @media (min-width: 768px) {
+                    display: flex;
+                    align-items: center;
+                    gap: 30px;
+
+                    .close-nav {
+                        display: none;
+                    }
+                }
+            }
+
+            .nav-items.active {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: black;
+                width: fit-content;
+                padding: 40px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 5px;
+                color: white;
+                height: 100vh;
+
+
+                .close-nav {
+                    display: inline;
+                    position: absolute;
+                    top: 0;
+                    right: 3px;
+                }
+            }
+
+
+            .socials {
+                display: flex;
+                gap: 5px;
+            }
         }
     }
+    
 }

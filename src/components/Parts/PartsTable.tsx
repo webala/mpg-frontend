@@ -3,8 +3,9 @@
 import React from "react";
 import CustomTable from "../Table/Table";
 import { useQuery } from "react-query";
+import { BsFillImageFill } from "react-icons/bs";
 
-function Parts({setParts}) {
+function Parts({ setParts }) {
 	const fetchParts = async () => {
 		const response = await fetch("http://localhost:8000/api/parts/");
 
@@ -15,7 +16,10 @@ function Parts({setParts}) {
 		return jsonRes;
 	};
 
-	const { data, isError, error, isLoading, isSuccess } = useQuery("parts", fetchParts);
+	const { data, isError, error, isLoading, isSuccess } = useQuery(
+		"parts",
+		fetchParts
+	);
 
 	if (isLoading) {
 		return <p>Loading...</p>;
@@ -26,10 +30,9 @@ function Parts({setParts}) {
 		return <div>Error</div>;
 	}
 	const tableColumns = ["Part No.", "Cars"];
-	
 
 	if (isSuccess) {
-      setParts(data)
+		setParts(data);
 		const tableRows = data.map((part) => ({
 			part_no: part.part_no,
 			cars: part.cars.length,
@@ -46,7 +49,7 @@ function Parts({setParts}) {
 		);
 	}
 
-   return <p>Cars</p>
+	return <p>Cars</p>;
 }
 
 export default Parts;

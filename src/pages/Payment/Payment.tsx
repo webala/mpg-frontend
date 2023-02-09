@@ -6,11 +6,15 @@ import { useLocation } from "react-router-dom";
 import { useMutation } from "react-query";
 import { Spinner } from "@chakra-ui/react";
 import AwaitTransaction from "../../components/AwaitTransaction/AwaitTransaction";
+import PesapalPayment from "../../components/PesapalPayment/PesapalPayment";
 
 function Payment() {
 	let orderId = 1;
 	const [phoneNumber, setPhoneNumber] = useState<string>();
 	const [transactionId, setTransactionId] = useState<number>();
+	const [iframeUrl, setIframeUrl] = useState<string>(
+		"https://cybqa.pesapal.com/pesapaliframe/PesapalIframe3/Index?OrderTrackingId=5d0e12f9-8526-4526-85ef-df0937ea5276"
+	);
 
 	// const { state } = useLocation();
 	// orderId = state.order_id;
@@ -24,7 +28,7 @@ function Payment() {
 		return order;
 	};
 
-	const addOrderMutation = useMutation(
+	const addMpesaTransactionMutation = useMutation(
 		async (data) => {
 			const response = await fetch("http://localhost:8000/api/payment/mpesa", {
 				method: "POST",
@@ -43,8 +47,36 @@ function Payment() {
 		},
 		{
 			onSuccess: (data) => {
-				console.log("success data: ", data);
+				console.log("mpesa success data: ", data);
 				setTransactionId(data.transaction_id);
+			},
+		}
+	);
+
+	const addPesapalTransactionMutation = useMutation(
+		async (data) => {
+			const response = await fetch(
+				"http://localhost:8000/api/payment/pesapal",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
+
+			if (!response.ok) {
+				throw Error(response.statusText);
+			}
+
+			const jsonRes = await response.json();
+			return jsonRes;
+		},
+		{
+			onSuccess: (data) => {
+				console.log("pesapal success data: ", data);
+				setIframeUrl(data.redirect_url);
 			},
 		}
 	);
@@ -60,10 +92,16 @@ function Payment() {
 			phone_number: "254791055897",
 			order_id: data?.id,
 		};
-		addOrderMutation.mutate(body);
+		addMpesaTransactionMutation.mutate(body);
 	};
 
-	const handleCardPayment = async () => {};
+	const handleCardPayment = async (e: React.SyntheticEvent) => {
+		e.preventDefault();
+		const body = {
+			order_id: data?.id,
+		};
+		addPesapalTransactionMutation.mutate(body);
+	};
 
 	if (isLoading) {
 		return <p>Loading ...</p>;
@@ -71,10 +109,7 @@ function Payment() {
 	if (isError) {
 		return <p>Error {error.message}</p>;
 	}
-	// if (isSuccess) {
-	// 	// setPhoneNumber(data.shipping_address.client.phone_number)
-	// }
-	console.log("data: ", data);
+
 	return (
 		<div className="payment">
 			<div className="container">
@@ -110,8 +145,8 @@ function Payment() {
 							/>
 						</div>
 						<div className="submit">
-							<button>Pay</button>
-							{addOrderMutation.isLoading ? (
+							<button type="submit">Pay</button>
+							{addMpesaTransactionMutation.isLoading ? (
 								<div className="loader">
 									{" "}
 									<Spinner color="green.500" /> <p>Initiating transaction</p>
@@ -124,17 +159,26 @@ function Payment() {
 					<AwaitTransaction transactionId={transactionId} />
 				) : null}
 				<div className="payment-method">
-					<h1 className="heading">Pay via card</h1>
+					<div>
+						<h1 className="heading">Pay via card</h1>
+						{addPesapalTransactionMutation.isError ? (
+							<div>{addPesapalTransactionMutation.error.message}</div>
+						) : null}
+					</div>
+
 					<form onSubmit={handleCardPayment}>
-						<div className="field">
-							{/* <input
-							type="text"
-							value={data.shipping_address.client.phone_number}
-							onChange={(e) => setPhoneNumber(e.target.value)}
-						/> */}
+						<div className="submit">
+							<button type="submit">Pay</button>
+							{addPesapalTransactionMutation.isLoading ? (
+								<div className="loader">
+									{" "}
+									<Spinner color="green.500" /> <p>Initiating transaction</p>
+								</div>
+							) : null}
 						</div>
 					</form>
 				</div>
+				{iframeUrl ? <PesapalPayment iframeUrl={iframeUrl} /> : null}
 			</div>
 		</div>
 	);
