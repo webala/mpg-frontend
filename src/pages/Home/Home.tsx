@@ -4,6 +4,7 @@ import { getCookie } from '../../cart';
 import Cart from '../../components/Cart/Cart';
 import Navbar from '../../components/Navbar/Navbar'
 import Parts from '../../components/Parts/Parts'
+import Hero from '../../components/Hero/Hero';
 
 function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -11,7 +12,7 @@ function Home() {
   const [cart, setCart] = useState(JSON.parse(getCookie("cart") as string))
   return (
     <div>
-        <Navbar onOpen={onOpen}/>
+        <Hero onOpen={onOpen}/>
         <Parts setCart={setCart}/>
         <Cart setCart={setCart} cart={cart} isOpen={isOpen} onClose={onClose} />
     </div>

@@ -9,6 +9,8 @@
         padding: 20px 70px;
     }
 
+
+
     .top {
         display: flex;
         align-items: center;
@@ -48,6 +50,7 @@
         border: 1px solid black;
         position: relative;
         padding: 5px;
+        background: white;
 
         @media (min-width: 768px) {
             padding: 20px 70px;
@@ -70,6 +73,13 @@
             .nav-items {
                 display: none;
 
+                a {
+                    transition: .3s ease-in;
+                }
+
+                a:hover {
+                    color: orangered;
+                }
 
                 @media (min-width: 768px) {
                     display: flex;
@@ -105,10 +115,24 @@
                 }
             }
 
+            
+
 
             .socials {
                 display: flex;
                 gap: 5px;
+
+                a {
+                    color: orangered;
+                }
+                
+                a:hover {
+                    color: var(--darkRed);
+                }
+
+                @media (min-width: 768px) {
+                    gap: 20px;   
+                }
             }
         }
     }

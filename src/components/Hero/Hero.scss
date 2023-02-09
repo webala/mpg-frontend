@@ -1,0 +1,42 @@
+.hero {
+    background: url("../../assets/hero-bg-3.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: cover;
+    height: 50vh;
+
+    @media (min-width: 768px) {
+        height: 70vh;
+    }
+
+    .container {
+        padding: 70px 10px;
+
+        @media (min-width: 768px) {
+            padding: 200px 70px;
+        }
+
+        .motto {
+            width: fit-content;
+            padding: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+
+            h1 {
+                font-family: striger;
+                font-size: 27px;
+                color: var(--darkRed);
+                font-weight: 700;
+
+                @media (min-width: 768px) {
+                    font-size: 50px;
+                }
+            }
+
+            p {
+                color: orangered;
+                font-size: 24px;
+            }
+        }
+    }
+}

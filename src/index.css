@@ -17,6 +17,8 @@
 
 * {
   font-family: 'Kanit', sans-serif;
+
+  --darkRed: rgb(204, 37, 37)
 }
 
 
@@ -75,4 +77,10 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+@font-face {
+  font-family: striger;
+  src: url("./assets/fonts/striger/STRIGER.ttf");
 }
