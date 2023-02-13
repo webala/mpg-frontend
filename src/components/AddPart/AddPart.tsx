@@ -15,24 +15,36 @@ function AddPart({ cars }: iAddPart) {
 	const [selectedCars, setSelectedCars] = useState<iCar[]>([]);
 	const [category, setCategory] = useState<string>();
 	const [inventory, setInventory] = useState<number>();
+	const [price, setPrice] = useState<number>();
+	const [description, setDescription] = useState<string>()
+	const [brand, setBrand] = useState<string>()
 	// const [partImg, setPartImg] = useState<File>()
 	const [searchResults, setSearchResults] = useState<iCar[]>([]);
 	const [name, setName] = useState<string>();
-	
 
-	const toast = useToast()
+	const toast = useToast();
 	const queryClent = useQueryClient();
 
-	const addPartMutation = useMutation((data) =>
-		fetch("http://localhost:8000/api/parts/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		}),
+	const addPartMutation = useMutation(
+		async (data) => {
+			const response = await fetch("http://localhost:8000/api/parts/", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+
+			if (!response.ok) {
+				throw Error(response.status);
+			}
+
+			const jsonRes = await response.json();
+			return jsonRes;
+		},
 		{
-			onSuccess: () => {
+			onSuccess: (data) => {
+				console.log("data: ", data);
 				toast({
 					title: "Success.",
 					description: "New part added.",
@@ -41,7 +53,7 @@ function AddPart({ cars }: iAddPart) {
 					isClosable: true,
 					position: "bottom-right",
 				});
-				queryClent.invalidateQueries('posts')
+				queryClent.invalidateQueries("posts");
 			},
 			onError: () => {
 				toast({
@@ -52,7 +64,7 @@ function AddPart({ cars }: iAddPart) {
 					isClosable: true,
 					position: "bottom-right",
 				});
-			}
+			},
 		}
 	);
 
@@ -74,9 +86,12 @@ function AddPart({ cars }: iAddPart) {
 			category: category,
 			name,
 			inventory,
+			price,
+			description,
+			brand
 		};
 
-		addPartMutation.mutate(data)
+		addPartMutation.mutate(data);
 	};
 	return (
 		<div className="add-part">
@@ -105,6 +120,30 @@ function AddPart({ cars }: iAddPart) {
 					<input
 						type="number"
 						onChange={(e) => setInventory(parseInt(e.target.value))}
+						required
+					/>
+				</div>
+				<div className="field">
+					<label htmlFor="make">Price</label>
+					<input
+						type="number"
+						onChange={(e) => setPrice(parseInt(e.target.value))}
+						required
+					/>
+				</div>
+				<div className="field">
+					<label htmlFor="make">Description</label>
+					<input
+						type="text"
+						onChange={(e) => setDescription(e.target.value)}
+						required
+					/>
+				</div>
+				<div className="field">
+					<label htmlFor="make">Brand</label>
+					<input
+						type="text"
+						onChange={(e) => setBrand(e.target.value)}
 						required
 					/>
 				</div>

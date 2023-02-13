@@ -8,7 +8,7 @@ import { Select } from "@chakra-ui/react";
 function Navbar({ onOpen }) {
 
 	
-	const [isActive, setIsActive] = useState<boolean>(true);
+	const [isActive, setIsActive] = useState<boolean>(false);
 
 
 

@@ -5,20 +5,22 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { getCookie, modifyCartCookie } from "../../cart";
 
 function Part({ part, setCart }) {
+	const addTOCart = () => {
+		modifyCartCookie("add", part.id);
+		setCart(JSON.parse(getCookie("cart") as string));
+	};
+
 	return (
 		<div className="part">
 			<img src={placeholder} alt="temp-placeholder" />
 			<div>
 				<p>{part.name}</p>
-				<p
-					className="add-to-cart"
-					onClick={() => {
-						modifyCartCookie("add", part.id);
-						setCart(JSON.parse(getCookie("cart") as string));
-					}}
-				>
-					<FaCartArrowDown />
-				</p>
+				<p>{part.description}</p>
+				<div className="add-to-cart">
+					<button  onClick={addTOCart}>
+						<FaCartArrowDown />
+					</button>
+				</div>
 			</div>
 		</div>
 	);

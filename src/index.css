@@ -18,7 +18,7 @@
 * {
   font-family: 'Kanit', sans-serif;
 
-  --darkRed: rgb(204, 37, 37)
+  --darkRed: rgb(143, 6, 6);
 }
 
 
@@ -83,4 +83,14 @@ button:focus-visible {
 @font-face {
   font-family: striger;
   src: url("./assets/fonts/striger/STRIGER.ttf");
+}
+
+@font-face {
+  font-family: dragz;
+  src: url("./assets/fonts/62dragz/62DRAGZ.otf");
+}
+
+@font-face {
+  font-family: neuropolitical;
+  src: url("./assets/fonts/neuropolitical/neuropolitical\ rg.otf");
 }
