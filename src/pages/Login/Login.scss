@@ -1,0 +1,45 @@
+.login {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   .login-form {
+      margin-top: 200px;
+      background: whitesmoke;
+      padding: 20px;
+      box-shadow: 0 5px 10px gray;
+      border-radius: 10px;
+
+      .error {
+         color: red;
+      }
+
+      .heading {
+         display: flex;
+         justify-content: center;
+         margin: 30px;
+      }
+
+      .field {
+         display: flex;
+         flex-direction: column;
+         margin-bottom: 20px;
+
+         label {
+            font-weight: 600;
+         }
+
+         input {
+            border: 1px solid black;
+         }
+      }
+
+      .submit {
+         button {
+            background: black;
+            color: white;
+            padding: 5px 10px;
+         }
+      }
+   }
+}

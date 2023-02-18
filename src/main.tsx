@@ -8,20 +8,30 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "./pages/Home/Home";
 import Payment from "./pages/Payment/Payment";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <Home />,
-	},
-	{
-		path: "/dashboard",
-		element: <Dashboard />,
-	},
-	{
-		path: "/payment",
-		element: <Payment />,
-	},
+   {
+      path: "/",
+      element: <Home />,
+   },
+   {
+      path: "/dashboard",
+      element: <Dashboard />,
+   },
+   {
+      path: "/payment",
+      element: <Payment />,
+   },
+   {
+      path: "/login",
+      element: <Login />,
+   },
+   {
+      path: "/register",
+      element: <Register />,
+   },
 ]);
 
 const queryClient = new QueryClient();
