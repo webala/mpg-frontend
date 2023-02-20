@@ -6,6 +6,7 @@ import "./Login.scss"
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user-slice";
 import jwt_decode from 'jwt-decode'
+import { useNavigate } from "react-router-dom";
 
 interface iError {
    message: string;
@@ -17,6 +18,7 @@ function Login() {
    const [error, setError] = useState<iError>();
 
    const dispatch = useDispatch()
+   const navigate = useNavigate()
 
    const handleSubmit = async (e: React.SyntheticEvent) => {
       e.preventDefault();
@@ -42,10 +44,17 @@ function Login() {
                   "Authorization"
                ] = `Bearer ${data["access"]}`;
 
-               const user = jwt_decode(data['access'])
+               const userData = jwt_decode(data['access'])
+
+               const user = {
+                  username: userData.username,
+                  id: userData.id,
+                  email: userData.email
+               }
+
                console.log('user: ', user)
-               // dispatch(userActions.login())
-               
+               dispatch(userActions.login(user))
+               navigate('/')
             }
          })
          .catch((error) => {

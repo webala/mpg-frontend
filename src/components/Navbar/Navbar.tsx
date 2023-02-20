@@ -10,15 +10,19 @@ import {
 } from "react-icons/ai";
 import { BsSearch, BsTwitter, BsInstagram, BsFacebook } from "react-icons/bs";
 import { Select } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 
 function Navbar({ onOpen }) {
    const [isActive, setIsActive] = useState<boolean>(false);
-   const [isAuth, setIsAuth] = useState(false);
-   useEffect(() => {
-      if (localStorage.getItem("access_token") !== null) {
-         setIsAuth(true);
-      }
-   }, [isAuth]);
+   // const [isAuth, setIsAuth] = useState(false);
+
+   const isAuth = useSelector(state => state.user.isAuth)
+
+   // useEffect(() => {
+   //    if (localStorage.getItem("access_token") !== null) {
+   //       setIsAuth(true);
+   //    }
+   // }, [isAuth]);
 
    return (
       <div className="navbar">
