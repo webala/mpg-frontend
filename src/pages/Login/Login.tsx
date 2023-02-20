@@ -3,6 +3,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./Login.scss"
+import { useDispatch } from "react-redux";
+import { userActions } from "../../store/user-slice";
+import jwt_decode from 'jwt-decode'
 
 interface iError {
    message: string;
@@ -12,6 +15,8 @@ function Login() {
    const [username, setUsername] = useState<string>("");
    const [password, setPassword] = useState<string>("");
    const [error, setError] = useState<iError>();
+
+   const dispatch = useDispatch()
 
    const handleSubmit = async (e: React.SyntheticEvent) => {
       e.preventDefault();
@@ -36,6 +41,11 @@ function Login() {
                axios.defaults.headers.common[
                   "Authorization"
                ] = `Bearer ${data["access"]}`;
+
+               const user = jwt_decode(data['access'])
+               console.log('user: ', user)
+               // dispatch(userActions.login())
+               
             }
          })
          .catch((error) => {

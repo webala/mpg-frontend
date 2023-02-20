@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Provider } from "react-redux";
+import store from "./store";
 import Home from "./pages/Home/Home";
 import Payment from "./pages/Payment/Payment";
 import Login from "./pages/Login/Login";
@@ -37,11 +39,13 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<React.StrictMode>
-		<QueryClientProvider client={queryClient}>
-			<ChakraProvider>
-				<RouterProvider router={router} />
-			</ChakraProvider>
-		</QueryClientProvider>
-	</React.StrictMode>
+   <React.StrictMode>
+      <Provider store={store}>
+         <QueryClientProvider client={queryClient}>
+            <ChakraProvider>
+               <RouterProvider router={router} />
+            </ChakraProvider>
+         </QueryClientProvider>
+      </Provider>
+   </React.StrictMode>
 );

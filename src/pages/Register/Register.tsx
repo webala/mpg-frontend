@@ -3,6 +3,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./Register.scss";
+import { useNavigate } from "react-router-dom";
 
 interface iError {
    message: string;
@@ -16,6 +17,8 @@ function Register() {
    const [password1, setPassword1] = useState<string>();
    const [password2, setPassword2] = useState<string>();
    const [email, setEmail] = useState<string>();
+
+   const navigate = useNavigate()
 
    const handleSubmit = async (e:React.SyntheticEvent) => {
       e.preventDefault()
@@ -44,6 +47,7 @@ function Register() {
             if (response.status >= 200 && response.status < 300) {
                res = { message: "Success" };
                console.log('registered.')
+               navigate('/login')
             }
          })
          .catch((error) => {
@@ -66,8 +70,8 @@ function Register() {
    };
 
    return (
-      <div>
-         <form onSubmit={handleSubmit} className="login-form">
+      <div className="register">
+         <form onSubmit={handleSubmit} className="register-form">
             {error ? <p className="error">{error.message}</p> : null}
             <div className="heading">
                <h1>Create an MPG account</h1>
