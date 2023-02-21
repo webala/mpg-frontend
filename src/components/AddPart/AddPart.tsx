@@ -5,12 +5,11 @@ import "../AddCar/AddCar.scss";
 import { BsSearch } from "react-icons/bs";
 import { useMutation, useQueryClient } from "react-query";
 import { useToast } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 
-interface iAddPart {
-	cars: iCar[];
-}
 
-function AddPart({ cars }: iAddPart) {
+
+function AddPart() {
 	const [partNo, setPartNo] = useState<string>();
 	const [selectedCars, setSelectedCars] = useState<iCar[]>([]);
 	const [category, setCategory] = useState<string>();
@@ -24,6 +23,7 @@ function AddPart({ cars }: iAddPart) {
 
 	const toast = useToast();
 	const queryClent = useQueryClient();
+	const cars = useSelector(state => state.cars.cars)
 
 	const addPartMutation = useMutation(
 		async (data) => {
@@ -36,7 +36,7 @@ function AddPart({ cars }: iAddPart) {
 			});
 
 			if (!response.ok) {
-				throw Error(response.status);
+				throw Error(response.status.toString());
 			}
 
 			const jsonRes = await response.json();
@@ -53,7 +53,7 @@ function AddPart({ cars }: iAddPart) {
 					isClosable: true,
 					position: "bottom-right",
 				});
-				queryClent.invalidateQueries("posts");
+				queryClent.invalidateQueries("parts");
 			},
 			onError: () => {
 				toast({
@@ -95,7 +95,6 @@ function AddPart({ cars }: iAddPart) {
 	};
 	return (
 		<div className="add-part">
-			<h1 className="heading">Add part</h1>
 			<form onSubmit={addPart}>
 				<div className="field">
 					<label htmlFor="make">Part name</label>
@@ -147,7 +146,7 @@ function AddPart({ cars }: iAddPart) {
 						required
 					/>
 				</div>
-				<div className="field">
+				<div>
 					<label htmlFor="make">Select a category</label>
 					<div className="categories">
 						<div className="category">

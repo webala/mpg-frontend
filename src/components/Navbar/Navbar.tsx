@@ -14,15 +14,8 @@ import { useSelector } from "react-redux";
 
 function Navbar({ onOpen }) {
    const [isActive, setIsActive] = useState<boolean>(false);
-   // const [isAuth, setIsAuth] = useState(false);
 
    const isAuth = useSelector(state => state.user.isAuth)
-
-   // useEffect(() => {
-   //    if (localStorage.getItem("access_token") !== null) {
-   //       setIsAuth(true);
-   //    }
-   // }, [isAuth]);
 
    return (
       <div className="navbar">
@@ -31,7 +24,7 @@ function Navbar({ onOpen }) {
                <img src={logo} alt="logo" />
             </div>
             <div className="links">
-               {isAuth ? <a href="#">Sign in</a> : <a href="#">Sign out</a>}
+               {isAuth ? <a href="#">Sign out</a> : <a href="#">Sign in</a>}
                <a href="#">
                   <BsSearch />
                </a>

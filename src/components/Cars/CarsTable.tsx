@@ -14,6 +14,7 @@ function Cars({setCars}: {setCars: React.Dispatch<SetStateAction<iCar[]>>}) {
       "body type",
       "engine",
    ];
+   
    const fetchCars = async () => {
       const response = await fetch("http://localhost:8000/api/cars/");
       if (!response.ok) {
