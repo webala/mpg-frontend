@@ -20,7 +20,6 @@ function Cart({ cart, setCart, isOpen, onClose }) {
 	const [cartItems, setCartItems] = useState([]);
 
 	let partIds = Object.keys(cart);
-	console.log('cart items: ', cartItems)
 
 	return (
 		<>

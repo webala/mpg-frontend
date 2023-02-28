@@ -24,7 +24,7 @@ function Navbar({ onOpen }) {
                <img src={logo} alt="logo" />
             </div>
             <div className="links">
-               {isAuth ? <a href="#">Sign out</a> : <a href="#">Sign in</a>}
+               {isAuth ? <a href="#">Sign out</a> : <a href="/login">Sign in</a>}
                <a href="#">
                   <BsSearch />
                </a>

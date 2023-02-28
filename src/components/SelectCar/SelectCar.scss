@@ -1,0 +1,46 @@
+.select-car {
+    background: black;
+    color: orangered;
+    padding: 20px 10px;
+
+    @media (min-width: 768px) {
+        padding: 50px 70px;
+    }
+
+    .your-car {
+        padding: 20px 0;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .car {
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit {
+            button {
+                background: var(--darkRed);
+                color: white;
+                padding: 1px 10px;
+            }
+
+            button:hover {
+                border: 1px solid orangered;
+            }
+        }
+    }
+
+    .choices {
+        display: flex;
+        gap: 10px;
+
+        .choice {
+            cursor: pointer;
+        }
+
+        .selected {
+            color: var(--darkRed);
+        }
+    }
+}

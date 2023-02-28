@@ -4,13 +4,13 @@ import { useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { getCookie } from "../../cart";
 import Cart from "../../components/Cart/Cart";
-import Navbar from "../../components/Navbar/Navbar";
 import Parts from "../../components/Parts/Parts";
 import Hero from "../../components/Hero/Hero";
 import AdminActions from "../../components/AdminActions/AdminActions";
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { carsActions } from "../../store/cars-slice";
+import SelectCar from "../../components/SelectCar/SelectCar";
 
 function Home() {
    const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,16 +29,19 @@ function Home() {
       return jsonRes;
    };
 
-   const { data, isSuccess } = useQuery("cars", fetchCars);
+   const { data, isSuccess, isLoading } = useQuery("cars", fetchCars);
 
+   if (isLoading) {
+      return <div>Loading ...</div>
+   }
    if (isSuccess) {
-      console.log("cars: ", data);
       dispatch(carsActions.serCars(data));
    }
    return (
       <div>
          <Hero onOpen={onOpen} />
          <AdminActions />
+         <SelectCar cars={data}/>
          <Parts setCart={setCart} />
          <Cart
             setCart={setCart}
