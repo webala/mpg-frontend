@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SelectCar.scss";
 import { useSelector } from "react-redux";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 function SelectCar({ cars }) {
-	
 	const isAuth = useSelector((state) => state.user.isAuth);
-  const user = useSelector((state) => state.user.user)
-  console.log('user: ', user)
+	const user = useSelector((state) => state.user.user);
+	console.log("user: ", user);
 
 	if (!isAuth) {
 		return (
@@ -26,6 +25,7 @@ function SelectCar({ cars }) {
 		year: "",
 		model: "",
 	});
+	const [selectionComplete, setSelectionComplete] = useState<boolean>(false);
 	const [makes, setMakes] = useState(
 		Array.from(new Set(cars.map((car) => car.make)))
 	);
@@ -34,27 +34,59 @@ function SelectCar({ cars }) {
 	const [years, setYears] = useState<string[]>([]);
 	const [engins, setEngins] = useState<string[]>([]);
 
-	const addUserVehicleMutation = useMutation(async (data) => {
-		const response = await fetch("http://localhost:8000/api/user/vehicles/add", {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data)
-    });
+	const fetchUserVehicles = async (username: string) => {
+		const response = await fetch(
+			`http://localhost:8000/api/user/vehicles/${username}`
+		);
+		if (!response.ok) {
+			throw new Error(response.statusText);
+		}
 
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
+		const jsonRes = await response.json();
+		return jsonRes;
+	};
 
-    const jsonRes = await response.json()
-    console.log('response: ', jsonRes)
-    return jsonRes
-	}, {
-    onSuccess: () => {
-      console.log("vehicle added successfullr")
-    }
-  });
+	const addUserVehicleMutation = useMutation(
+		async (data) => {
+			const response = await fetch(
+				"http://localhost:8000/api/user/vehicles/add",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error(response.statusText);
+			}
+
+			const jsonRes = await response.json();
+			console.log("response: ", jsonRes);
+			return jsonRes;
+		},
+		{
+			onSuccess: () => {
+				console.log("vehicle added successfully");
+			},
+		}
+	);
+
+	useEffect(() => {
+		if (
+			selectedCar.model &&
+			selectedCar.series &&
+			selectedCar.engine &&
+			selectedCar.year &&
+			selectedCar.make
+		) {
+			setSelectionComplete(true);
+		} else {
+			setSelectionComplete(false);
+		}
+	}, [selectionComplete, selectedCar]);
 
 	const handleSubmitCar = () => {
 		const car = cars.find(
@@ -65,14 +97,14 @@ function SelectCar({ cars }) {
 				car.year === selectedCar.year &&
 				car.series === selectedCar.series
 		);
-    
-    const data = {
-      username: user.username,
-      car_id: car.id
-    }
-    
+
+		const data = {
+			username: user.username,
+			car_id: car.id,
+		};
+
 		console.log("selected car: ", car);
-    addUserVehicleMutation.mutate(data)
+		addUserVehicleMutation.mutate(data);
 	};
 
 	const handleSetSelectedCar = (data) => {
@@ -102,7 +134,17 @@ function SelectCar({ cars }) {
 			// }
 
 			setSeries(availableSeries as string[]);
-			setSelectedCar((car) => ({ ...car, make: data.make }));
+			setModels([]);
+			setYears([]);
+			setEngins([]);
+			setSelectedCar((car) => ({
+				...car,
+				make: data.make,
+				series: "",
+				model: "",
+				year: "",
+				engine: "",
+			}));
 		} else if (data.series) {
 			const availableModels = Array.from(
 				new Set(
@@ -118,7 +160,15 @@ function SelectCar({ cars }) {
 			// }
 
 			setModels(availableModels as string[]);
-			setSelectedCar((car) => ({ ...car, series: data.series }));
+			setYears([]);
+			setEngins([]);
+			setSelectedCar((car) => ({
+				...car,
+				series: data.series,
+				model: "",
+				year: "",
+				engine: "",
+			}));
 		} else if (data.model) {
 			const availableYears = Array.from(
 				new Set(
@@ -135,7 +185,13 @@ function SelectCar({ cars }) {
 			);
 
 			setYears(availableYears as string[]);
-			setSelectedCar((car) => ({ ...car, model: data.model }));
+			setEngins([]);
+			setSelectedCar((car) => ({
+				...car,
+				model: data.model,
+				year: "",
+				engine: "",
+			}));
 		} else if (data.year) {
 			const availableEngins = Array.from(
 				new Set(
@@ -153,103 +209,137 @@ function SelectCar({ cars }) {
 			);
 
 			setEngins(availableEngins as string[]);
-			setSelectedCar((car) => ({ ...car, year: data.year }));
+			setSelectedCar((car) => ({ ...car, year: data.year, engine: "" }));
 		} else if (data.engine) {
 			setSelectedCar((car) => ({ ...car, engine: data.engine }));
 		}
 	};
-	console.log("makes: ", makes);
+	const { data, isLoading, isError, error, isSuccess } = useQuery(
+		["userVEhicles", user.username],
+		() => fetchUserVehicles(user.username)
+	);
 
 	return (
 		<div className="select-car">
-			<h1 className="heading">Select your vehicle</h1>
+			<h1 className="heading">Your vehicles</h1>
 			<div className="your-car">
-				<div className="car">
-					<p>{selectedCar.make}</p>
-					<p>{selectedCar.series}</p>
-					<p>{selectedCar.model}</p>
-					<p>{selectedCar.body_type}</p>
-					<p>{selectedCar.year}</p>
-					<p>{selectedCar.engine}</p>
-				</div>
-
-				<div className="submit">
-					<button onClick={handleSubmitCar}>Select this car</button>
-				</div>
+				{data.map((car) => (
+					<div className="car">
+						<p>{car.make}</p>
+						<p>{car.series}</p>
+						<p>{car.model}</p>
+						<p>{car.year}</p>
+						<p>{car.engine}</p>
+					</div>
+				))}
 			</div>
-			<div>
-				<div className="makes choices">
-					{makes.map((make, index) => (
-						<p
-							className={
-								selectedCar.make === make ? "choice selected" : "choice"
-							}
-							onClick={() => handleSetSelectedCar({ make })}
-							key={index}
-						>
-							{make as string}
-						</p>
-					))}
+			<div className="new-car">
+				<div className="selected-car">
+					<h1>Select a new vehicle</h1>
+
+					<div>
+						<p>{selectedCar.make}</p>
+						<p>{selectedCar.series}</p>
+						<p>{selectedCar.model}</p>
+						<p>{selectedCar.year}</p>
+						<p>{selectedCar.engine}</p>
+
+						{selectionComplete ? (
+							<div className="submit">
+								<button onClick={handleSubmitCar}>Select this car</button>
+							</div>
+						) : null}
+					</div>
 				</div>
-				{series ? (
-					<div className="choices">
-						{series.map((series, index) => (
-							<p
-								className={
-									selectedCar.series === series ? "choice selected" : "choice"
-								}
-								key={index}
-								onClick={() => handleSetSelectedCar({ series })}
-							>
-								{series as string}
-							</p>
-						))}
+				{makes && (
+					<div className="spec">
+						<h1 className="category-heading">Make</h1>
+						<div className="makes choices">
+							{makes.map((make, index) => (
+								<p
+									className={
+										selectedCar.make === make ? "choice selected" : "choice"
+									}
+									onClick={() => handleSetSelectedCar({ make })}
+									key={index}
+								>
+									{make as string}
+								</p>
+							))}
+						</div>
+					</div>
+				)}
+				{series.length > 0 ? (
+					<div className="spec">
+						<h1 className="category-heading">Series</h1>
+						<div className="choices">
+							{series.map((series, index) => (
+								<p
+									className={
+										selectedCar.series === series ? "choice selected" : "choice"
+									}
+									key={index}
+									onClick={() => handleSetSelectedCar({ series })}
+								>
+									{series as string}
+								</p>
+							))}
+						</div>
 					</div>
 				) : null}
 
-				{models ? (
-					<div className="choices">
-						{models.map((model, index) => (
-							<p
-								className={
-									selectedCar.model === model ? "choice selected" : "choice"
-								}
-								key={index}
-								onClick={() => handleSetSelectedCar({ model })}
-							>
-								{model as string}
-							</p>
-						))}
+				{models.length > 0 ? (
+					<div className="spec">
+						<h1 className="category-heading">Model</h1>
+						<div className="choices">
+							{models.map((model, index) => (
+								<p
+									className={
+										selectedCar.model === model ? "choice selected" : "choice"
+									}
+									key={index}
+									onClick={() => handleSetSelectedCar({ model })}
+								>
+									{model as string}
+								</p>
+							))}
+						</div>
 					</div>
 				) : null}
-				{years ? (
-					<div className="choices">
-						{years.map((year, index) => (
-							<p
-								className={
-									selectedCar.year === year ? "choice selected" : "choice"
-								}
-								key={index}
-								onClick={() => handleSetSelectedCar({ year })}
-							>
-								{year as string}
-							</p>
-						))}
+				{years.length > 0 ? (
+					<div className="spec">
+						<h1 className="category-heading">Year</h1>
+						<div className="choices">
+							{years.map((year, index) => (
+								<p
+									className={
+										selectedCar.year === year ? "choice selected" : "choice"
+									}
+									key={index}
+									onClick={() => handleSetSelectedCar({ year })}
+								>
+									{year as string}
+								</p>
+							))}
+						</div>
 					</div>
 				) : null}
-				{engins ? (
-					<div className="choices">
-						{engins.map((engine, index) => (
-							<p
-								className={
-									selectedCar.engine === engine ? "choice selected" : "choice"
-								}
-								key={index}
-								onClick={() => handleSetSelectedCar({ engine })}
-							>
-								{engine as string}
-							</p>
-						))}
+				{engins.length > 0 ? (
+					<div className="spec">
+						<h1 className="category-heading">Engine</h1>
+						<div className="choices">
+							{engins.map((engine, index) => (
+								<p
+									className={
+										selectedCar.engine === engine ? "choice selected" : "choice"
+									}
+									key={index}
+									onClick={() => handleSetSelectedCar({ engine })}
+								>
+									{engine as string}
+								</p>
+							))}
+						</div>
 					</div>
 				) : null}
 			</div>
