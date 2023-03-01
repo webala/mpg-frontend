@@ -45,11 +45,12 @@ function Login() {
                ] = `Bearer ${data["access"]}`;
 
                const userData = jwt_decode(data['access'])
-
+               console.log('user data: ', userData)
                const user = {
                   username: userData.username,
                   id: userData.id,
-                  email: userData.email
+                  email: userData.email,
+                  groups: userData.groups
                }
 
                console.log('user: ', user)

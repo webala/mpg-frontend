@@ -1,56 +1,57 @@
 /** @format */
 
 import { useDisclosure } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { getCookie } from "../../cart";
 import Cart from "../../components/Cart/Cart";
 import Parts from "../../components/Parts/Parts";
 import Hero from "../../components/Hero/Hero";
 import AdminActions from "../../components/AdminActions/AdminActions";
 import { useQuery } from "react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { carsActions } from "../../store/cars-slice";
 import SelectCar from "../../components/SelectCar/SelectCar";
 
 function Home() {
-   const { isOpen, onOpen, onClose } = useDisclosure();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
-   const [cart, setCart] = useState(JSON.parse(getCookie("cart") as string));
+	const [cart, setCart] = useState(JSON.parse(getCookie("cart") as string));
 
-   const dispatch = useDispatch();
+	const isAuth = useSelector((state) => state.user.isAuth);
+	const user = useSelector((state) => state.user.user);
+	const groups = user.groups;
+	const isRetailer = groups.indexOf("retailer");
 
-   const fetchCars = async () => {
-      const response = await fetch("http://localhost:8000/api/cars/");
-      if (!response.ok) {
-         throw Error("something went wrong");
-      }
+	const dispatch = useDispatch();
 
-      const jsonRes = await response.json();
-      return jsonRes;
-   };
+	const fetchCars = async () => {
+		const response = await fetch("http://localhost:8000/api/cars/");
+		if (!response.ok) {
+			throw new Error("something went wrong");
+		}
 
-   const { data, isSuccess, isLoading } = useQuery("cars", fetchCars);
+		const jsonRes = await response.json();
+		return jsonRes;
+	};
 
-   if (isLoading) {
-      return <div>Loading ...</div>
-   }
-   if (isSuccess) {
-      dispatch(carsActions.serCars(data));
-   }
-   return (
-      <div>
-         <Hero onOpen={onOpen} />
-         <AdminActions />
-         <SelectCar cars={data}/>
-         <Parts setCart={setCart} />
-         <Cart
-            setCart={setCart}
-            cart={cart}
-            isOpen={isOpen}
-            onClose={onClose}
-         />
-      </div>
-   );
+	const { data: cars, isSuccess, isLoading } = useQuery("cars", fetchCars);
+
+	if (isLoading) {
+		return <div>Loading ...</div>;
+	}
+	if (isSuccess) {
+		dispatch(carsActions.serCars(cars));
+		console.log("cars: ", cars);
+		return (
+			<div>
+				<Hero onOpen={onOpen} />
+				{isAuth && isRetailer >= 0 ? <AdminActions /> : null}
+				<SelectCar cars={cars} />
+				<Parts setCart={setCart} />
+				<Cart setCart={setCart} cart={cart} isOpen={isOpen} onClose={onClose} />
+			</div>
+		);
+	}
 }
 
 export default Home;

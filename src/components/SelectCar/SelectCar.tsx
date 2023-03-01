@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./SelectCar.scss";
 import { useSelector } from "react-redux";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Select } from "@chakra-ui/react";
 
 function SelectCar({ cars }) {
 	const isAuth = useSelector((state) => state.user.isAuth);
@@ -46,6 +47,8 @@ function SelectCar({ cars }) {
 		return jsonRes;
 	};
 
+	const queryClient = useQueryClient();
+
 	const addUserVehicleMutation = useMutation(
 		async (data) => {
 			const response = await fetch(
@@ -70,6 +73,7 @@ function SelectCar({ cars }) {
 		{
 			onSuccess: () => {
 				console.log("vehicle added successfully");
+				queryClient.invalidateQueries(["userVehicles", user.username]);
 			},
 		}
 	);
@@ -214,29 +218,52 @@ function SelectCar({ cars }) {
 			setSelectedCar((car) => ({ ...car, engine: data.engine }));
 		}
 	};
-	const { data, isLoading, isError, error, isSuccess } = useQuery(
-		["userVEhicles", user.username],
-		() => fetchUserVehicles(user.username)
+
+	const {
+		data: vehicles,
+		isLoading,
+		isError,
+		error,
+		isSuccess,
+	} = useQuery(["userVehicles", user.username], () =>
+		fetchUserVehicles(user.username)
 	);
 
+	if (isLoading) {
+		return (
+			<div className="select-car">
+				<h1 className="heading">Your vehicles</h1>
+				<p>Loading ...</p>
+			</div>
+		);
+	}
+
+	// if (isError) {
+	// 	return <div>Error</div>;
+	// }
 	return (
 		<div className="select-car">
 			<h1 className="heading">Your vehicles</h1>
-			<div className="your-car">
-				{data.map((car) => (
-					<div className="car">
-						<p>{car.make}</p>
-						<p>{car.series}</p>
-						<p>{car.model}</p>
-						<p>{car.year}</p>
-						<p>{car.engine}</p>
-					</div>
-				))}
-			</div>
+			{isSuccess && (
+				<div className="your-car">
+					{vehicles.map((car) => (
+						<div className="car">
+							<p>{car.make}</p>
+							<p>{car.series}</p>
+							<p>{car.model}</p>
+							<p>{car.year}</p>
+							<p>{car.engine}</p>
+						</div>
+					))}
+				</div>
+			)}
+
+			{isError && (
+				<div className="your-car">You do not have any saved vehicles.</div>
+			)}
 			<div className="new-car">
 				<div className="selected-car">
 					<h1>Select a new vehicle</h1>
-
 					<div>
 						<p>{selectedCar.make}</p>
 						<p>{selectedCar.series}</p>
@@ -255,17 +282,19 @@ function SelectCar({ cars }) {
 					<div className="spec">
 						<h1 className="category-heading">Make</h1>
 						<div className="makes choices">
-							{makes.map((make, index) => (
-								<p
-									className={
-										selectedCar.make === make ? "choice selected" : "choice"
-									}
-									onClick={() => handleSetSelectedCar({ make })}
-									key={index}
-								>
-									{make as string}
-								</p>
-							))}
+							<Select placeholder="Make">
+								{makes.map((make, index) => (
+									<option
+										className={
+											selectedCar.make === make ? "choice selected" : "choice"
+										}
+										onClick={() => handleSetSelectedCar({ make })}
+										key={index}
+									>
+										{make as string}
+									</option>
+								))}
+							</Select>
 						</div>
 					</div>
 				)}
@@ -273,17 +302,21 @@ function SelectCar({ cars }) {
 					<div className="spec">
 						<h1 className="category-heading">Series</h1>
 						<div className="choices">
-							{series.map((series, index) => (
-								<p
-									className={
-										selectedCar.series === series ? "choice selected" : "choice"
-									}
-									key={index}
-									onClick={() => handleSetSelectedCar({ series })}
-								>
-									{series as string}
-								</p>
-							))}
+							<Select placeholder="Series">
+								{series.map((series, index) => (
+									<option
+										className={
+											selectedCar.series === series
+												? "choice selected"
+												: "choice"
+										}
+										key={index}
+										onClick={() => handleSetSelectedCar({ series })}
+									>
+										{series as string}
+									</option>
+								))}
+							</Select>
 						</div>
 					</div>
 				) : null}
@@ -292,17 +325,19 @@ function SelectCar({ cars }) {
 					<div className="spec">
 						<h1 className="category-heading">Model</h1>
 						<div className="choices">
-							{models.map((model, index) => (
-								<p
-									className={
-										selectedCar.model === model ? "choice selected" : "choice"
-									}
-									key={index}
-									onClick={() => handleSetSelectedCar({ model })}
-								>
-									{model as string}
-								</p>
-							))}
+							<Select placeholder="Model">
+								{models.map((model, index) => (
+									<option
+										className={
+											selectedCar.model === model ? "choice selected" : "choice"
+										}
+										key={index}
+										onClick={() => handleSetSelectedCar({ model })}
+									>
+										{model as string}
+									</option>
+								))}
+							</Select>
 						</div>
 					</div>
 				) : null}
@@ -310,17 +345,19 @@ function SelectCar({ cars }) {
 					<div className="spec">
 						<h1 className="category-heading">Year</h1>
 						<div className="choices">
-							{years.map((year, index) => (
-								<p
-									className={
-										selectedCar.year === year ? "choice selected" : "choice"
-									}
-									key={index}
-									onClick={() => handleSetSelectedCar({ year })}
-								>
-									{year as string}
-								</p>
-							))}
+							<Select placeholder="Year">
+								{years.map((year, index) => (
+									<option
+										className={
+											selectedCar.year === year ? "choice selected" : "choice"
+										}
+										key={index}
+										onClick={() => handleSetSelectedCar({ year })}
+									>
+										{year as string}
+									</option>
+								))}
+							</Select>
 						</div>
 					</div>
 				) : null}
@@ -328,17 +365,21 @@ function SelectCar({ cars }) {
 					<div className="spec">
 						<h1 className="category-heading">Engine</h1>
 						<div className="choices">
-							{engins.map((engine, index) => (
-								<p
-									className={
-										selectedCar.engine === engine ? "choice selected" : "choice"
-									}
-									key={index}
-									onClick={() => handleSetSelectedCar({ engine })}
-								>
-									{engine as string}
-								</p>
-							))}
+							<Select placeholder="Engine">
+								{engins.map((engine, index) => (
+									<option
+										className={
+											selectedCar.engine === engine
+												? "choice selected"
+												: "choice"
+										}
+										key={index}
+										onClick={() => handleSetSelectedCar({ engine })}
+									>
+										{engine as string}
+									</option>
+								))}
+							</Select>
 						</div>
 					</div>
 				) : null}

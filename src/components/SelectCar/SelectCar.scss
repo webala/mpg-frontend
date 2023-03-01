@@ -58,6 +58,11 @@
             .category-heading {
                 text-transform: uppercase;
                 color: var(--darkRed);
+                margin-bottom: 5px;
+            }
+
+            @media (min-width: 768px) {
+                width: 50%;
             }
         }
     }
