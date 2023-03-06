@@ -10,9 +10,10 @@ function Part({ part, setCart }) {
 		setCart(JSON.parse(getCookie("cart") as string));
 	};
 
+	console.log('part: ', part)
 	return (
 		<div className="part">
-			<img src={placeholder} alt="temp-placeholder" />
+			<img src={part.image_url ? part.image_url: placeholder} alt="temp-placeholder" />
 			<div>
 				<p>{part.name}</p>
 				<p>{part.description}</p>

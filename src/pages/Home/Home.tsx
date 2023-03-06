@@ -20,7 +20,10 @@ function Home() {
 	const isAuth = useSelector((state) => state.user.isAuth);
 	const user = useSelector((state) => state.user.user);
 	const groups = user.groups;
-	const isRetailer = groups.indexOf("retailer");
+	let isRetailer = -1;
+	if (groups) {
+		isRetailer = groups.indexOf("retailer");
+	}
 
 	const dispatch = useDispatch();
 
