@@ -8,21 +8,28 @@ import {
 import "./CartItem.scss";
 import { getCookie, modifyCartCookie } from "../../cart";
 
-function CartItem({setCartItems, setCart, id, quantity }) {
+type CartItemProps = {
+	setCart: Function;
+	id: string;
+	quantity: number;
+};
+
+function CartItem({ setCart, id, quantity }: CartItemProps) {
 	const [qtity, setQtity] = useState(quantity);
-	const fetchPart = async (id: number) => {
+	const fetchPart = async (id: string) => {
 		const response = await fetch(`http://localhost:8000/api/part/${id}`);
 
 		if (!response.ok) {
 			throw Error("Something went wrong");
 		}
-		
+
 		const part = await response.json();
 		return part;
 	};
 
-	const { data, isLoading, isError, error, isSuccess } = useQuery(["part", id], () =>
-		fetchPart(id)
+	const { data, isLoading, isError, error, isSuccess } = useQuery(
+		["part", id],
+		() => fetchPart(id)
 	);
 
 	if (isLoading) {
@@ -33,30 +40,10 @@ function CartItem({setCartItems, setCart, id, quantity }) {
 		return <p>Something went wrong</p>;
 	}
 
-	// if (isSuccess) {
-	// 	setCartItems((items) => {
-	// 		const isPresent = items.find((item) => item.part.id == id)
-	// 		if (!isPresent) {
-	// 			return [...items, {part: data, quantity}]
-	// 		}
-	// 		return [...items]
-	// 	})
-	// }
-	// useEffect(() => {
-	// 	if (data) {
-	// 		
-	// 	}
-	// }, [])
-
-	// setCartItems((items) => [...items, { part: data, quantity }]);
-
 	const modifyCart = (id: number, action: string) => {
 		modifyCartCookie(action, id);
 		setCart(JSON.parse(getCookie("cart") as string));
 	};
-
-	
-	
 
 	return (
 		<div className="cart-item">
@@ -66,9 +53,9 @@ function CartItem({setCartItems, setCart, id, quantity }) {
 			</div>
 
 			<div className="actions">
-				<MdOutlineAddCircleOutline onClick={() => modifyCart(id, "add")} />
+				<MdOutlineAddCircleOutline onClick={() => modifyCart(parseInt(id), "add")} />
 				<p>{quantity}</p>
-				<MdRemoveCircleOutline onClick={() => modifyCart(id, "remove")} />
+				<MdRemoveCircleOutline onClick={() => modifyCart(parseInt(id), "remove")} />
 			</div>
 		</div>
 	);

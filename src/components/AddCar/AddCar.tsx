@@ -16,14 +16,31 @@ function AddCar() {
 	const queryClient = useQueryClient();
 
 	const addCarMutation = useMutation(
-		(data) =>
-			fetch("http://localhost:8000/api/cars/", {
+		async () => {
+			const data = {
+				make,
+				series,
+				model,
+				year: `${fromYear}-${toYear}`,
+				body_type: bodyType,
+				engine,
+			};
+
+			const response = await fetch("http://localhost:8000/api/cars/", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(data),
-			}),
+			});
+
+			if (!response.ok) {
+				throw new Error(response.statusText);
+			}
+
+			const jsonRes = await response.json();
+			return jsonRes;
+		},
 		{
 			onSuccess: () => {
 				toast({
@@ -52,16 +69,7 @@ function AddCar() {
 	const addCar = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		const data = {
-			make,
-			series,
-			model,
-			year: `${fromYear}-${toYear}`,
-			body_type: bodyType,
-			engine,
-		};
-
-		addCarMutation.mutate(data);
+		addCarMutation.mutate();
 	};
 
 	return (

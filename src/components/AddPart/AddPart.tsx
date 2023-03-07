@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { iCar } from "../../pages/Dashboard/Dashboard";
 import "./AddPart.scss";
 import "../AddCar/AddCar.scss";
 import { BsSearch } from "react-icons/bs";
@@ -7,16 +6,17 @@ import { useMutation, useQueryClient } from "react-query";
 import { useToast } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { Car, GlobalState } from "../../interface";
 
 function AddPart() {
 	const [partNo, setPartNo] = useState<string>();
-	const [selectedCars, setSelectedCars] = useState<iCar[]>([]);
+	const [selectedCars, setSelectedCars] = useState<Car[]>([]);
 	const [category, setCategory] = useState<string>();
 	const [inventory, setInventory] = useState<number>();
 	const [price, setPrice] = useState<number>();
 	const [description, setDescription] = useState<string>();
 	const [brand, setBrand] = useState<string>();
-	const [searchResults, setSearchResults] = useState<iCar[]>([]);
+	const [searchResults, setSearchResults] = useState<Car[]>([]);
 	const [name, setName] = useState<string>();
 	const [partImg, setPartImg] = useState<File>();
 	const [step, setStep] = useState<number>(1);
@@ -24,7 +24,7 @@ function AddPart() {
 
 	const toast = useToast();
 	const queryClent = useQueryClient();
-	const cars = useSelector((state) => state.cars.cars);
+	const cars = useSelector((state:GlobalState) => state.cars.cars);
 
 	const addPartMutation = useMutation(
 		async (data) => {
@@ -189,7 +189,7 @@ function AddPart() {
 						/>
 					</div>
 					<div>
-						<label htmlFor="make">Select a category</label>
+						<label className="title" htmlFor="make">Select a category</label>
 						<div className="categories">
 							<div className="category">
 								<label htmlFor="brakes">Brakes</label>
@@ -252,7 +252,7 @@ function AddPart() {
 							<BsSearch />
 						</div>
 						<div className="cars">
-							{searchResults.map((result: iCar, index: number) => {
+							{searchResults.map((result: Car, index: number) => {
 								return (
 									<div className="field" key={index}>
 										<div className="label">
@@ -279,8 +279,6 @@ function AddPart() {
 									</div>
 								);
 							})}
-
-							{searchResults.length <= 0 && <p>Find cars by make</p>}
 						</div>
 					</div>
 					<div className="submit-btn">

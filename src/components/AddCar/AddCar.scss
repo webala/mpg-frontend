@@ -1,5 +1,7 @@
-.add-car, .add-part {
+.add-car,
+.add-part {
 	font-size: 12px;
+
 	.heading {
 		font-size: 24px;
 	}
@@ -16,11 +18,15 @@
 			// width: 300px;
 			margin-bottom: 15px;
 
+			label {
+				font-weight: 600;
+			}
+
 			input {
 				height: 30px;
-				// width: 200px;
 				border: 1px solid black;
 				padding: 0 5px;
+				border-radius: 5px;
 
 				@media (min-width: 768px) {
 					width: 400px;

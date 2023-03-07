@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import "./Payment.scss";
-import localforage from "localforage";
 import { useLocation } from "react-router-dom";
 import { useMutation } from "react-query";
 import { Spinner } from "@chakra-ui/react";
@@ -107,7 +106,7 @@ function Payment() {
 		return <p>Loading ...</p>;
 	}
 	if (isError) {
-		return <p>Error {error.message}</p>;
+		return <p>Error {error instanceof Error ? error.message : null}</p>;
 	}
 
 	return (
@@ -162,7 +161,11 @@ function Payment() {
 					<div>
 						<h1 className="heading">Pay via card</h1>
 						{addPesapalTransactionMutation.isError ? (
-							<div>{addPesapalTransactionMutation.error.message}</div>
+							<div>
+								{addPesapalTransactionMutation.error instanceof Error
+									? addPesapalTransactionMutation.error.message
+									: null}
+							</div>
 						) : null}
 					</div>
 

@@ -1,11 +1,14 @@
 /** @format */
 
 import React, { SetStateAction } from "react";
-import { iCar } from "../../pages/Dashboard/Dashboard";
 import CustomTable from "../Table/Table";
 import { useQuery } from "react-query";
+import { Car } from "../../interface";
 
-function Cars({setCars}: {setCars: React.Dispatch<SetStateAction<iCar[]>>}) {
+
+
+
+function Cars({setCars}: {setCars: React.Dispatch<SetStateAction<Car[]>>}) {
    const tableColumns = [
       "make",
       "series",
@@ -37,7 +40,7 @@ function Cars({setCars}: {setCars: React.Dispatch<SetStateAction<iCar[]>>}) {
    }
 
    if (isSuccess) {
-      const tableRows = data.map((car: iCar) => ({
+      const tableRows = data.map((car: Car) => ({
          make: car.make,
          series: car.series,
          model: car.model,

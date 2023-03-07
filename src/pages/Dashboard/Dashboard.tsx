@@ -5,20 +5,12 @@ import AddPart from "../../components/AddPart/AddPart";
 import Cars from "../../components/Cars/CarsTable";
 import Overview from "../../components/Overview/Overview";
 import Parts from "../../components/Parts/PartsTable";
+import { Car, PartShape } from "../../interface";
 
-export interface iCar {
-	id?: number;
-	make: string;
-	series?: string;
-	model: string;
-	year: string;
-	body_type: string;
-	engine: string;
-}
 
 function Dashboard() {
-	const [cars, setCars] = useState<iCar[]>([]);
-	const [parts, setParts] = useState([]);
+	const [cars, setCars] = useState<Car[]>([]);
+	const [parts, setParts] = useState<PartShape[]>([]);
 
 	return (
 		<div className="dashboard">
@@ -26,7 +18,7 @@ function Dashboard() {
 			<Overview cars={cars.length} parts={parts.length} />
 			<div className="forms">
 				<AddCar />
-				<AddPart cars={cars} />
+				<AddPart />
 			</div>
 			<div className="tables">
 				<Cars setCars={setCars} />

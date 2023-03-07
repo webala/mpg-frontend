@@ -12,9 +12,21 @@ import {
 	TableCaption,
 	TableContainer,
 } from "@chakra-ui/react";
+import { Car, PartShape } from "../../interface";
 
-function CustomTable({ totalRegisters, tableColumns, tableData, title }) {
-	const [page, setPage] = useState(1);
+type CustomTableProps = {
+	totalRegisters: number;
+	tableColumns: string[];
+	tableData: Car[] | PartShape[];
+	title: string;
+};
+
+function CustomTable({
+	totalRegisters,
+	tableColumns,
+	tableData,
+	title,
+}: CustomTableProps) {
 	return (
 		<div className="table">
 			<TableContainer>
@@ -28,22 +40,18 @@ function CustomTable({ totalRegisters, tableColumns, tableData, title }) {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{tableData.map(
-							(
-								data,
-								index
-							) => {
-								const keys:string[] = Object.keys(data);
+						{tableData.map((data: Car | PartShape, index: number) => {
+							const keys: string[] = Object.keys(data);
+							// const keys: number[] = keyStrings.map(key => parseInt(key))
 
-								return (
-									<Tr key={index}>
-										{keys.map((key, index) => (
-											<Td key={index}>{data[key]}</Td>
-										))}
-									</Tr>
-								);
-							}
-						)}
+							return (
+								<Tr key={index}>
+									{keys.map((key, index) => (
+										<Td key={index}>{data[key] as string}</Td>
+									))}
+								</Tr>
+							);
+						})}
 					</Tbody>
 					<Tfoot>
 						<Tr>

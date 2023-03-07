@@ -11,14 +11,16 @@ import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { carsActions } from "../../store/cars-slice";
 import SelectCar from "../../components/SelectCar/SelectCar";
+import { GlobalState } from "../../interface";
 
 function Home() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const [cart, setCart] = useState(JSON.parse(getCookie("cart") as string));
 
-	const isAuth = useSelector((state) => state.user.isAuth);
-	const user = useSelector((state) => state.user.user);
+	const isAuth = useSelector((state: GlobalState) => state.user.isAuth);
+	const user = useSelector((state: GlobalState) => state.user.user);
+
 	const groups = user.groups;
 	let isRetailer = -1;
 	if (groups) {
@@ -42,19 +44,18 @@ function Home() {
 	if (isLoading) {
 		return <div>Loading ...</div>;
 	}
-	if (isSuccess) {
-		dispatch(carsActions.serCars(cars));
-		console.log("cars: ", cars);
-		return (
-			<div>
-				<Hero onOpen={onOpen} />
-				{isAuth && isRetailer >= 0 ? <AdminActions /> : null}
-				<SelectCar cars={cars} />
-				<Parts setCart={setCart} />
-				<Cart setCart={setCart} cart={cart} isOpen={isOpen} onClose={onClose} />
-			</div>
-		);
-	}
+
+	dispatch(carsActions.serCars(cars));
+	console.log("cars: ", cars);
+	return (
+		<div>
+			<Hero onOpen={onOpen} />
+			{isAuth && isRetailer >= 0 ? <AdminActions /> : null}
+			<SelectCar cars={cars} />
+			<Parts setCart={setCart} />
+			<Cart setCart={setCart} cart={cart} isOpen={isOpen} onClose={onClose} />
+		</div>
+	);
 }
 
 export default Home;

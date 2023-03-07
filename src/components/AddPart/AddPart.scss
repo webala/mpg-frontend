@@ -9,6 +9,11 @@
             margin: 50px 0;
          }
       }
+
+      .title {
+         font-weight: 600;
+      }
+      
       .categories {
          display: flex;
          flex-wrap: wrap;
@@ -23,13 +28,6 @@
             gap: 0;
             margin: 0;
             padding: 0;
-
-            input,
-            label {
-               // width: 20px;
-               margin: 0;
-               padding: 0;
-            }
          }
       }
 
@@ -37,9 +35,11 @@
          display: flex;
          flex-direction: column;
          align-items: flex-start;
+         margin-top: 20px;
 
          h2 {
             margin-bottom: 20px;
+            font-weight: 700;
          }
 
          .search {
@@ -49,30 +49,32 @@
             flex-direction: row-reverse;
             justify-content: flex-end;
             align-items: center;
-            width: 300px;
+            width: 90%;
             gap: 5px;
 
             input:focus {
                outline: none;
+               width: 100%;
             }
          }
 
          .cars {
             display: flex;
             flex-direction: column;
+
             .field {
                display: flex;
                flex-direction: row;
                align-items: center;
                justify-content: space-between;
-               width: 300px;
+   
+
 
                .label {
                   display: flex;
                   flex-direction: column;
                   align-items: flex-start;
-
-                  font-size: 10px;
+                  font-size: 13px;
                }
 
                input {

@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, } from "react";
 import "./Cart.scss";
 import {
 	Drawer,
 	DrawerBody,
-	DrawerFooter,
 	DrawerHeader,
 	DrawerOverlay,
 	DrawerContent,
 	DrawerCloseButton,
 } from "@chakra-ui/react";
-
-import { getCookie } from "../../cart";
 import CartItem from "../CartItem/CartItem";
 import Process from "../Process/Process";
 
-interface iCart {}
-function Cart({ cart, setCart, isOpen, onClose }) {
-	const btnRef = React.useRef();
-	const [cartItems, setCartItems] = useState([]);
+type CartProps = {
+	cart: object,
+	setCart: Function,
+	onClose: () => void,
+	isOpen: boolean,
+}
+function Cart({ cart, setCart, isOpen, onClose }:CartProps) {
+	const btnRef = React.useRef<HTMLButtonElement>(null);
 
 	let partIds = Object.keys(cart);
 
@@ -36,10 +37,9 @@ function Cart({ cart, setCart, isOpen, onClose }) {
 					<DrawerHeader>Cart</DrawerHeader>
 					<DrawerBody>
 						<div className="cart">
-							{partIds.map((id, index) => (
+							{partIds.map((id:string, index:number) => (
 								<CartItem
 									key={index}
-									setCartItems={setCartItems}
 									setCart={setCart}
 									id={id}
 									quantity={cart[id].quantity}

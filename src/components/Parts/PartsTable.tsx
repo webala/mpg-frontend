@@ -1,11 +1,15 @@
 /** @format */
 
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import CustomTable from "../Table/Table";
 import { useQuery } from "react-query";
-import { BsFillImageFill } from "react-icons/bs";
+import { PartShape } from "../../interface";
 
-function Parts({ setParts }) {
+function Parts({
+	setParts,
+}: {
+	setParts: React.Dispatch<SetStateAction<PartShape[]>>;
+}) {
 	const fetchParts = async () => {
 		const response = await fetch("http://localhost:8000/api/parts/");
 
@@ -32,8 +36,8 @@ function Parts({ setParts }) {
 	const tableColumns = ["Part No.", "Cars"];
 
 	if (isSuccess) {
-		setParts(data);
-		const tableRows = data.map((part) => ({
+		setParts(data as PartShape[]);
+		const tableRows = data.map((part: PartShape) => ({
 			part_no: part.part_no,
 			cars: part.cars.length,
 		}));

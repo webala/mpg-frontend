@@ -2,7 +2,11 @@ import React from "react";
 import Navbar from "../Navbar/Navbar";
 import "./Hero.scss";
 
-function Hero({ onOpen }) {
+type HeroProps = {
+	onOpen: Function
+}
+
+function Hero({ onOpen }: HeroProps) {
 	return (
 		<div className="hero">
 			<Navbar onOpen={onOpen} />

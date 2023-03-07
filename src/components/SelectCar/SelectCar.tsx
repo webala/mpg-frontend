@@ -1,13 +1,33 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./SelectCar.scss";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Select } from "@chakra-ui/react";
+import { Select, Spinner } from "@chakra-ui/react";
+import { Car, GlobalState } from "../../interface";
 
-function SelectCar({ cars }) {
-	const isAuth = useSelector((state) => state.user.isAuth);
-	const user = useSelector((state) => state.user.user);
-	console.log("user: ", user);
+type SelectCarProps = {
+	cars: Car[];
+};
+
+type addVehicleData = {
+	username: string;
+	car_id: number;
+};
+
+type selectedCar = {
+	make?: string;
+	model?: string;
+	engine?: string;
+	year?: string;
+	series?: string;
+	body_type?: string;
+};
+
+function SelectCar({ cars }: SelectCarProps) {
+	const isAuth = useSelector((state: GlobalState) => state.user.isAuth);
+	const user = useSelector((state: GlobalState) => state.user.user);
+
+	const [submitData, setSubmitData] = useState<addVehicleData>();
 
 	if (!isAuth) {
 		return (
@@ -19,12 +39,13 @@ function SelectCar({ cars }) {
 			</div>
 		);
 	}
-	const [selectedCar, setSelectedCar] = useState({
+	const [selectedCar, setSelectedCar] = useState<selectedCar>({
 		make: "",
 		engine: "",
 		series: "",
 		year: "",
 		model: "",
+		body_type: "",
 	});
 	const [selectionComplete, setSelectionComplete] = useState<boolean>(false);
 	const [makes, setMakes] = useState(
@@ -34,6 +55,7 @@ function SelectCar({ cars }) {
 	const [models, setModels] = useState<string[]>([]);
 	const [years, setYears] = useState<string[]>([]);
 	const [engins, setEngins] = useState<string[]>([]);
+	const [bodyTypes, setBodyTypes] = useState<string[]>([]);
 
 	const fetchUserVehicles = async (username: string) => {
 		const response = await fetch(
@@ -50,7 +72,7 @@ function SelectCar({ cars }) {
 	const queryClient = useQueryClient();
 
 	const addUserVehicleMutation = useMutation(
-		async (data) => {
+		async () => {
 			const response = await fetch(
 				"http://localhost:8000/api/user/vehicles/add",
 				{
@@ -58,7 +80,7 @@ function SelectCar({ cars }) {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(data),
+					body: JSON.stringify(submitData),
 				}
 			);
 
@@ -84,7 +106,8 @@ function SelectCar({ cars }) {
 			selectedCar.series &&
 			selectedCar.engine &&
 			selectedCar.year &&
-			selectedCar.make
+			selectedCar.make &&
+			selectedCar.body_type
 		) {
 			setSelectionComplete(true);
 		} else {
@@ -104,43 +127,15 @@ function SelectCar({ cars }) {
 
 		const data = {
 			username: user.username,
-			car_id: car.id,
+			car_id: car?.id,
 		};
-
-		console.log("selected car: ", car);
-		addUserVehicleMutation.mutate(data);
+		setSubmitData(data as addVehicleData);
+		addUserVehicleMutation.mutate();
 	};
 
-	const handleSetSelectedCar = (data) => {
+	const handleSetSelectedCar = (data: selectedCar) => {
+		console.log("data: ", data);
 		if (data.make) {
-			const availableSeries = Array.from(
-				new Set(
-					cars.map((car) => {
-						if (car.make === data.make) {
-							return car.series;
-						}
-					})
-				)
-			);
-
-			// if (!availableSeries) {
-			// 	const availableModels = Array.from(
-			// 		new Set(
-			// 			cars.map((car) => {
-			// 				if (car.series === data.series && car.make === selectedCar.make) {
-			// 					return car.model;
-			// 				}
-			// 			})
-			// 		)
-			// 	);
-
-			// 	setModels(availableModels as string[]);
-			// }
-
-			setSeries(availableSeries as string[]);
-			setModels([]);
-			setYears([]);
-			setEngins([]);
 			setSelectedCar((car) => ({
 				...car,
 				make: data.make,
@@ -148,74 +143,140 @@ function SelectCar({ cars }) {
 				model: "",
 				year: "",
 				engine: "",
+				body_type: "",
 			}));
-		} else if (data.series) {
-			const availableModels = Array.from(
-				new Set(
-					cars.map((car) => {
-						if (car.series === data.series && car.make === selectedCar.make) {
-							return car.model;
-						}
-					})
-				)
+
+			const availableVehicles = [
+				...new Set(cars.filter((car) => car.make === data.make)),
+			];
+
+			const availableSeries = availableVehicles.map(
+				(vehicle) => vehicle.series
 			);
 
-			// if (!availableModels) {
-			// }
-
-			setModels(availableModels as string[]);
+			setSeries(availableSeries as string[]);
+			setModels([]);
 			setYears([]);
 			setEngins([]);
+			setBodyTypes([]);
+		} else if (data.series) {
 			setSelectedCar((car) => ({
 				...car,
 				series: data.series,
 				model: "",
 				year: "",
 				engine: "",
+				body_type: "",
 			}));
-		} else if (data.model) {
-			const availableYears = Array.from(
-				new Set(
-					cars.map((car) => {
+
+			const availableCars = [
+				...new Set(
+					cars.filter((car) => {
+						if (
+							car.series === data.series &&
+							car.make === selectedCar.make &&
+							car.model
+						) {
+							return car;
+						}
+					})
+				),
+			];
+
+			const availableModels = availableCars.map((car) => car.model);
+			console.log("available models: ", availableModels);
+
+			if (availableModels.length <= 0) {
+				handleSetSelectedCar({ model: "" });
+			}
+
+			setModels(availableModels as string[]);
+			setYears([]);
+			setEngins([]);
+			setBodyTypes([]);
+		} else if (data.hasOwnProperty("model")) {
+			console.log("its data model");
+			const availableCars = [
+				...new Set(
+					cars.filter((car) => {
+						console.log(
+							"model: ",
+							car.series,
+							selectedCar.series,
+							"is equal: ",
+							car.series === selectedCar.series
+						);
 						if (
 							car.model === data.model &&
 							car.make === selectedCar.make &&
 							car.series === selectedCar.series
 						) {
-							return car.year;
+							return car;
 						}
 					})
-				)
-			);
+				),
+			];
+			console.log("available years: ", availableCars);
 
+			const availableYears = availableCars.map((car) => car.year);
 			setYears(availableYears as string[]);
 			setEngins([]);
+			setBodyTypes([]);
 			setSelectedCar((car) => ({
 				...car,
 				model: data.model,
 				year: "",
 				engine: "",
+				body_type: "",
 			}));
 		} else if (data.year) {
-			const availableEngins = Array.from(
+			const availableCars = Array.from(
 				new Set(
-					cars.map((car) => {
+					cars.filter((car) => {
 						if (
 							car.year === data.year &&
 							car.model === selectedCar.model &&
 							car.make === selectedCar.make &&
 							car.series === selectedCar.series
 						) {
-							return car.engine;
+							return car;
 						}
 					})
 				)
 			);
 
+			const availableEngins = availableCars.map((car) => car.engine);
+
 			setEngins(availableEngins as string[]);
-			setSelectedCar((car) => ({ ...car, year: data.year, engine: "" }));
+			setBodyTypes([]);
+			setSelectedCar((car) => ({
+				...car,
+				year: data.year,
+				engine: "",
+				body_type: "",
+			}));
 		} else if (data.engine) {
-			setSelectedCar((car) => ({ ...car, engine: data.engine }));
+			setSelectedCar((car) => ({ ...car, engine: data.engine, body_type: "" }));
+			const availableCars = Array.from(
+				new Set(
+					cars.filter((car) => {
+						if (
+							car.engine === data.engine &&
+							car.year === selectedCar.year &&
+							car.model === selectedCar.model &&
+							car.make === selectedCar.make &&
+							car.series === selectedCar.series
+						) {
+							return car;
+						}
+					})
+				)
+			);
+
+			const availableBodyTypes = availableCars.map((car) => car.body_type);
+			setBodyTypes(availableBodyTypes as string[]);
+		} else if (data.body_type) {
+			setSelectedCar((car) => ({ ...car, body_type: data.body_type }));
 		}
 	};
 
@@ -223,30 +284,27 @@ function SelectCar({ cars }) {
 		data: vehicles,
 		isLoading,
 		isError,
-		error,
 		isSuccess,
 	} = useQuery(["userVehicles", user.username], () =>
-		fetchUserVehicles(user.username)
+		fetchUserVehicles(user.username as string)
 	);
 
 	if (isLoading) {
 		return (
 			<div className="select-car">
 				<h1 className="heading">Your vehicles</h1>
-				<p>Loading ...</p>
+				<p>
+					<Spinner color="red.500" />
+				</p>
 			</div>
 		);
 	}
-
-	// if (isError) {
-	// 	return <div>Error</div>;
-	// }
 	return (
 		<div className="select-car">
 			<h1 className="heading">Your vehicles</h1>
 			{isSuccess && (
 				<div className="your-car">
-					{vehicles.map((car) => (
+					{vehicles.map((car: Car) => (
 						<div className="car">
 							<p>{car.make}</p>
 							<p>{car.series}</p>
@@ -270,6 +328,7 @@ function SelectCar({ cars }) {
 						<p>{selectedCar.model}</p>
 						<p>{selectedCar.year}</p>
 						<p>{selectedCar.engine}</p>
+						<p>{selectedCar.body_type}</p>
 
 						{selectionComplete ? (
 							<div className="submit">
@@ -377,6 +436,30 @@ function SelectCar({ cars }) {
 										onClick={() => handleSetSelectedCar({ engine })}
 									>
 										{engine as string}
+									</option>
+								))}
+							</Select>
+						</div>
+					</div>
+				) : null}
+				{bodyTypes.length > 0 ? (
+					<div className="spec">
+						<h1 className="category-heading">Body type</h1>
+						<div className="choices">
+							<Select placeholder="Body type">
+								{bodyTypes.map((bodyType, index) => (
+									<option
+										className={
+											selectedCar.body_type === bodyType
+												? "choice selected"
+												: "choice"
+										}
+										key={index}
+										onClick={() =>
+											handleSetSelectedCar({ body_type: bodyType })
+										}
+									>
+										{bodyType as string}
 									</option>
 								))}
 							</Select>

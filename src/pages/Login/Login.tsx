@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user-slice";
 import jwt_decode from 'jwt-decode'
 import { useNavigate } from "react-router-dom";
+import { User } from "../../interface";
 
 interface iError {
    message: string;
@@ -44,7 +45,7 @@ function Login() {
                   "Authorization"
                ] = `Bearer ${data["access"]}`;
 
-               const userData = jwt_decode(data['access'])
+               const userData: User = jwt_decode(data['access'])
                console.log('user data: ', userData)
                const user = {
                   username: userData.username,

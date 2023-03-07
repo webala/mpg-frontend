@@ -4,8 +4,14 @@ import Part from "../Part/Part";
 import "./Category.scss";
 import placeholder from "../../assets/tyres.jpg";
 import {AiOutlineArrowRight} from 'react-icons/ai'
+import { PartShape } from "../../interface";
 
-function Category({ setCart, categoryName }) {
+type CategoryProps = {
+	setCart: Function,
+	categoryName: string
+}
+
+function Category({ setCart, categoryName }: CategoryProps) {
 	const fetchCategoryParts = async () => {
 		const response = await fetch(
 			`http://localhost:8000/api/parts/${categoryName}`
@@ -45,7 +51,7 @@ function Category({ setCart, categoryName }) {
 				</div>
 			</div>
 			<div className="parts">
-				{data.map((item, index) => {
+				{data.map((item:PartShape, index:number) => {
 					return <Part setCart={setCart} part={item} key={index} />;
 				})}
 			</div>
