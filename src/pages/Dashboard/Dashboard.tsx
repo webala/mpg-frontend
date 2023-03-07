@@ -1,31 +1,69 @@
-import { useEffect, useState } from "react";
-import "./Dashboard.scss";
-import AddCar from "../../components/AddCar/AddCar";
-import AddPart from "../../components/AddPart/AddPart";
-import Cars from "../../components/Cars/CarsTable";
-import Overview from "../../components/Overview/Overview";
-import Parts from "../../components/Parts/PartsTable";
-import { Car, PartShape } from "../../interface";
-
+import axios from "axios";
+import { useQuery } from "react-query";
 
 function Dashboard() {
-	const [cars, setCars] = useState<Car[]>([]);
-	const [parts, setParts] = useState<PartShape[]>([]);
+	const fetchOrders = async () => {
+		const response = await axios.get("http://localhost:8000/api/orderslist");
+		return response.data;
+	};
 
-	return (
-		<div className="dashboard">
-			
-			<Overview cars={cars.length} parts={parts.length} />
-			<div className="forms">
-				<AddCar />
-				<AddPart />
-			</div>
-			<div className="tables">
-				<Cars setCars={setCars} />
-				<Parts setParts={setParts}/>
-			</div>
-		</div>
-	);
+	const fetchMpesaTransactions = async () => {
+		const response = await axios.get(
+			"http://localhost:8000/api/transactions/mpesa"
+		);
+		return response.data;
+	};
+
+	const fetchPesapalTransactions = async () => {
+		const response = await axios.get(
+			"http://localhost:8000/api/transactions/pesapal"
+		);
+		return response.data;
+	};
+
+	const fetchClients = async () => {
+		const response = await axios.get("http://localhost:8000/api/clients");
+		return response.data;
+	};
+
+	const {
+		data: orders,
+		isLoading: isOrdersLoading,
+		isError: isOrdersError,
+		error: ordersError,
+	} = useQuery("orders", fetchOrders);
+
+	const {
+		data: pesapalTransctions,
+		isLoading: isPesapalTransctionsLoading,
+		isError: isPesapalTransctionsError,
+		error: pesapalTransctionsError,
+		isSuccess: pesapalTransctionsSuccess,
+	} = useQuery("pesapal-transactions", fetchPesapalTransactions);
+
+	const {
+		data: mpesaTransctions,
+		isLoading: isMpesaTransctionsLoading,
+		isError: isMpesaTransctionsError,
+		error: mpesaTransctionsError,
+		isSuccess: mpesaTransctionsSuccess,
+	} = useQuery("mpesa-transactions", fetchMpesaTransactions);
+
+	const {
+		data: clients,
+		isLoading: isClientsLoading,
+		isError: isClientsError,
+		error: clientError,
+		isSuccess: isClientSuccess,
+	} = useQuery("clients", fetchClients);
+
+	if (isClientsLoading) {
+		return <div>loading</div>;
+	}
+
+	console.log("clients: ", clients);
+
+	return <div className="dashboard"></div>;
 }
 
 export default Dashboard;
