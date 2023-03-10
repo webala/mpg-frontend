@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import "./Dashboard.scss"
 
 function Dashboard() {
 	const fetchOrders = async () => {
@@ -63,7 +65,28 @@ function Dashboard() {
 
 	console.log("clients: ", clients);
 
-	return <div className="dashboard"></div>;
+	return (
+		<div className="dashboard">
+			<div className="tables">
+				<Tabs variant="soft-rounded" colorScheme="red">
+					<TabList>
+						<Tab>Orders</Tab>
+						<Tab>Mpesa Transactions</Tab>
+						<Tab>Pesapal Transactions</Tab>
+						<Tab>Client list</Tab>
+					</TabList>
+					<TabPanels>
+						<TabPanel>
+							<p>one!</p>
+						</TabPanel>
+						<TabPanel>
+							<p>two!</p>
+						</TabPanel>
+					</TabPanels>
+				</Tabs>
+			</div>
+		</div>
+	);
 }
 
 export default Dashboard;
