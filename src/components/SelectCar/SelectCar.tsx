@@ -168,7 +168,7 @@ function SelectCar({ cars }: SelectCarProps) {
 				engine: "",
 				body_type: "",
 			}));
-
+			console.log("selectedCar", selectedCar)
 			const availableCars = [
 				...new Set(
 					cars.filter((car) => {
@@ -187,7 +187,9 @@ function SelectCar({ cars }: SelectCarProps) {
 			console.log("available models: ", availableModels);
 
 			if (availableModels.length <= 0) {
+				
 				handleSetSelectedCar({ model: "" });
+				console.log('series after recursion: ', selectedCar.series)
 			}
 
 			setModels(availableModels as string[]);

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { carsActions } from "../../store/cars-slice";
 import SelectCar from "../../components/SelectCar/SelectCar";
 import { GlobalState } from "../../interface";
+import Footer from "../../components/Footer/Footer";
 
 function Home() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,6 +55,7 @@ function Home() {
 			<SelectCar cars={cars} />
 			<Parts setCart={setCart} />
 			<Cart setCart={setCart} cart={cart} isOpen={isOpen} onClose={onClose} />
+			<Footer />
 		</div>
 	);
 }

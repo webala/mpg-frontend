@@ -1,0 +1,148 @@
+/** @format */
+
+.footer {
+   background: black;
+   color: white;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 50px 0;
+
+   @media (min-width: 1028px) {
+      flex-direction: row;
+      justify-content: space-evenly;
+   }
+
+   .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 40px;
+
+      img {
+         width: 200px;
+      }
+
+      h1 {
+         margin-bottom: 20px;
+         color: orangered;
+         font-size: 19px;
+         font-weight: 700;
+      }
+
+      .socials {
+         display: flex;
+         align-items: center;
+         gap: 30px;
+         margin-bottom: 20px;
+
+         a {
+            font-size: 23px;
+            transition: 0.3s ease-in;
+         }
+
+         a:hover {
+            color: orangered;
+         }
+      }
+
+      .contact {
+         a {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+            transition: 0.3s ease-in;
+         }
+
+         a:hover {
+            color: orangered;
+         }
+      }
+   }
+
+   .links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 90%;
+      margin-bottom: 40px;
+      gap: 5px;
+
+      @media (min-width: 768px) {
+         width: 60%;
+      }
+
+      @media (min-width: 1028px) {
+         width: auto;
+      }
+
+      a {
+         transition: 0.3s ease-in;
+      }
+
+      a:hover {
+         color: orangered;
+      }
+   }
+
+   .form {
+      width: 90%;
+
+      @media (min-width: 768px) {
+         width: 60%;
+      }
+      @media (min-width: 1028px) {
+         width: auto;
+      }
+
+      h1 {
+         color: orangered;
+         margin-bottom: 10px;
+      }
+
+      form {
+         .field {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+
+            label {
+               color: orangered;
+               opacity: 0.7;
+               margin-bottom: 5px;
+            }
+
+            input {
+               width: 500px;
+               border-radius: 5px;
+               padding: 10px;
+               color: black;
+            }
+
+            input:focus {
+               outline: 1px solid orangered;
+            }
+
+            .inputs {
+               display: flex;
+               gap: 10px;
+               input {
+                  width: 240px;
+               }
+            }
+         }
+
+         .submit {
+            button {
+               background: var(--darkRed);
+               padding: 5px 10px;
+            }
+
+            button:hover {
+               border: none;
+               outline: 1px solid orangered;
+            }
+         }
+      }
+   }
+}
