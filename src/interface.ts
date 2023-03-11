@@ -73,3 +73,12 @@ export type OrderShape = {
     is_complete: boolean,
     date_created: string
 }
+
+export type CartItem = {
+    productId: number,
+    quantity: number,
+}
+
+export type Cart = {
+    cartItems: CartItem[]
+}
