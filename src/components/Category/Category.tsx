@@ -12,31 +12,7 @@ type CategoryProps = {
 }
 
 function Category({ setCart, categoryName }: CategoryProps) {
-	const fetchCategoryParts = async () => {
-		const response = await fetch(
-			`http://localhost:8000/api/parts/${categoryName}`
-		);
-
-		if (!response.ok) {
-			throw Error("Something went wrong");
-		}
-		const jsonRes = await response.json();
-		return jsonRes;
-	};
-
-	const { data, isLoading, isError, isSuccess, error } = useQuery(
-		["parts", categoryName],
-		fetchCategoryParts
-	);
-
-	if (isLoading) {
-		return <p>Loading parts ...</p>;
-	}
-
-	if (isError) {
-		console.log("error: ", error);
-		return <p>Something went wron</p>;
-	}
+	
 
 	return (
 		<div className="category">
@@ -50,11 +26,11 @@ function Category({ setCart, categoryName }: CategoryProps) {
 					</a>
 				</div>
 			</div>
-			<div className="parts">
+			{/* <div className="parts">
 				{data.map((item:PartShape, index:number) => {
 					return <Part setCart={setCart} part={item} key={index} />;
 				})}
-			</div>
+			</div> */}
 		</div>
 	);
 }

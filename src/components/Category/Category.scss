@@ -1,12 +1,9 @@
 .category {
     display: flex;
-    margin: 100px 0;
     gap: 100px;
     align-items: center;
 
-    @media (min-width: 768px) {
-        padding: 0 70px;
-    }
+    
     
 
     .heading {

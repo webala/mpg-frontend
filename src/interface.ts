@@ -43,3 +43,33 @@ export type PartShape = {
     part_no: string,
     price: string
 }
+
+export type OrderItem = {
+    part: PartShape,
+    quantity: number
+}
+
+export type ClientShape = {
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    email: string,
+    is_subscribed: boolean,
+    id?: number
+}
+
+export type ShippingAddress = {
+    id?: number,
+    location: string,
+    building: string,
+    house_number: string,
+    description: string,
+    client: ClientShape
+}
+
+export type OrderShape = {
+    id?:number,
+    shipping_address: ShippingAddress,
+    is_complete: boolean,
+    date_created: string
+}

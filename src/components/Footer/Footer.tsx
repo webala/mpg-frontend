@@ -36,7 +36,6 @@ function Footer() {
          </div>
          <div className="links">
             <a href="#">About MPG</a>
-            <a href="#">Contact</a>
             <a href="#">Terms of service</a>
             <a href="#">Refund policy</a>
          </div>

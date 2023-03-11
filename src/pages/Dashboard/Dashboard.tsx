@@ -2,12 +2,11 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import "./Dashboard.scss"
+import Orders from "../../components/Orders/Orders";
+import Clients from "../../components/Clients/Clients";
 
 function Dashboard() {
-	const fetchOrders = async () => {
-		const response = await axios.get("http://localhost:8000/api/orderslist");
-		return response.data;
-	};
+	
 
 	const fetchMpesaTransactions = async () => {
 		const response = await axios.get(
@@ -23,17 +22,7 @@ function Dashboard() {
 		return response.data;
 	};
 
-	const fetchClients = async () => {
-		const response = await axios.get("http://localhost:8000/api/clients");
-		return response.data;
-	};
-
-	const {
-		data: orders,
-		isLoading: isOrdersLoading,
-		isError: isOrdersError,
-		error: ordersError,
-	} = useQuery("orders", fetchOrders);
+	
 
 	const {
 		data: pesapalTransctions,
@@ -51,42 +40,38 @@ function Dashboard() {
 		isSuccess: mpesaTransctionsSuccess,
 	} = useQuery("mpesa-transactions", fetchMpesaTransactions);
 
-	const {
-		data: clients,
-		isLoading: isClientsLoading,
-		isError: isClientsError,
-		error: clientError,
-		isSuccess: isClientSuccess,
-	} = useQuery("clients", fetchClients);
+	
 
-	if (isClientsLoading) {
-		return <div>loading</div>;
-	}
-
-	console.log("clients: ", clients);
+	// console.log("clients: ", clients);
 
 	return (
-		<div className="dashboard">
-			<div className="tables">
-				<Tabs variant="soft-rounded" colorScheme="red">
-					<TabList>
-						<Tab>Orders</Tab>
-						<Tab>Mpesa Transactions</Tab>
-						<Tab>Pesapal Transactions</Tab>
-						<Tab>Client list</Tab>
-					</TabList>
-					<TabPanels>
-						<TabPanel>
-							<p>one!</p>
-						</TabPanel>
-						<TabPanel>
-							<p>two!</p>
-						</TabPanel>
-					</TabPanels>
-				</Tabs>
-			</div>
-		</div>
-	);
+      <div className="dashboard">
+         <div className="tables">
+            <Tabs variant="soft-rounded" colorScheme="red">
+               <TabList>
+                  <Tab>Orders</Tab>
+                  {/* <Tab>Mpesa Transactions</Tab>
+                  <Tab>Pesapal Transactions</Tab> */}
+                  <Tab>Client list</Tab>
+               </TabList>
+               <TabPanels>
+                  <TabPanel>
+                     <Orders />
+                  </TabPanel>
+                  {/* <TabPanel>
+                     <p>two!</p>
+                  </TabPanel>
+                  <TabPanel>
+                     <p>two!</p>
+                  </TabPanel> */}
+                  <TabPanel>
+                     <Clients />
+                  </TabPanel>
+               </TabPanels>
+            </Tabs>
+         </div>
+      </div>
+   );
 }
 
 export default Dashboard;

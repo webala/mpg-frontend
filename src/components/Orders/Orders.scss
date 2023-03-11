@@ -1,0 +1,57 @@
+.orders {
+   width: 100%;
+   .order {
+      margin-bottom: 20px;
+      border: 1px solid var(--darkRed);
+      padding: 5px;
+      border-radius: 5px;
+      width: 100%;
+
+      @media (min-width: 768px) {
+         width: 700px;
+      }
+
+      .heading {
+         font-weight: 700;
+         margin-bottom: 10px;
+      }
+
+      .summary {
+         .info {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 10px;
+
+            @media (min-width: 768px) {
+               justify-content: space-between;
+            }
+
+            .payment-indicator {
+               font-size: 20px;
+            }
+            .paid {
+               color: green;
+            }
+
+            .unpaid {
+               color: var(--darkRed);
+            }
+
+            .process {
+               display: flex;
+               align-items: center;
+               gap: 10px;
+            }
+         }
+
+         .items {
+            .sub-heading {
+               font-weight: 600;
+               opacity: .9;
+               margin-bottom: 5px;
+            }
+         }
+      }
+   }
+}
