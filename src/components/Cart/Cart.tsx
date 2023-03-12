@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from "react";
+import React from "react";
 import "./Cart.scss";
 import {
 	Drawer,
@@ -10,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import CartItem from "../CartItem/CartItem";
 import Process from "../Process/Process";
+import { useSelector } from "react-redux";
+import { CartItem as CartItemShape, GlobalState } from "../../interface";
 
 type CartProps = {
 	cart: object,
@@ -20,7 +22,9 @@ type CartProps = {
 function Cart({ cart, setCart, isOpen, onClose }:CartProps) {
 	const btnRef = React.useRef<HTMLButtonElement>(null);
 
-	let partIds = Object.keys(cart);
+	// const cartItems: CartItemShape[] = useSelector((state:GlobalState) => state.cart.cartItems);
+
+	// let partIds = Object.keys(cart);
 
 	return (
 		<>
@@ -37,14 +41,14 @@ function Cart({ cart, setCart, isOpen, onClose }:CartProps) {
 					<DrawerHeader>Cart</DrawerHeader>
 					<DrawerBody>
 						<div className="cart">
-							{partIds.map((id:string, index:number) => (
+							{/* {cartItems.map((item:CartItemShape , index:number) => (
 								<CartItem
 									key={index}
 									setCart={setCart}
-									id={id}
-									quantity={cart[id].quantity}
+									id={item.productId}
+									quantity={item.quantity}
 								/>
-							))}
+							))} */}
 						</div>
 						<Process cart={cart}/>
 					</DrawerBody>

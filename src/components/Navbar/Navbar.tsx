@@ -11,11 +11,12 @@ import {
 import { BsSearch, BsTwitter, BsInstagram, BsFacebook } from "react-icons/bs";
 import { Select } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import { GlobalState } from "../../interface";
 
-function Navbar({ onOpen }) {
+function Navbar({ onOpen }: { onOpen: () => void }) {
    const [isActive, setIsActive] = useState<boolean>(false);
 
-   const isAuth = useSelector(state => state.user.isAuth)
+   const isAuth = useSelector((state: GlobalState) => state.user.isAuth);
 
    return (
       <div className="navbar">
@@ -24,7 +25,11 @@ function Navbar({ onOpen }) {
                <img src={logo} alt="logo" />
             </div>
             <div className="links">
-               {isAuth ? <a href="#">Sign out</a> : <a href="/login">Sign in</a>}
+               {isAuth ? (
+                  <a href="#">Sign out</a>
+               ) : (
+                  <a href="/login">Sign in</a>
+               )}
                <a href="#">
                   <BsSearch />
                </a>

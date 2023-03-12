@@ -1,61 +1,57 @@
+/** @format */
+
 .category {
-    display: flex;
-    gap: 100px;
-    align-items: center;
+   cursor: pointer;
 
-    
-    
+   .heading {
+      position: relative;
+      width: 200px;
+      height: 350px;
+      border-radius: 15px;
 
-    .heading {
-        position: relative;
-        width: 200px;
-        height: 350px;
-        border-radius: 15px;
+      img {
+         object-fit: cover;
+         height: 100%;
+         border-radius: 15px;
+      }
 
-        img {
-            object-fit: cover;
-            height: 100%;
-            border-radius: 15px;
-        }
+      .text {
+         position: absolute;
+         top: 40%;
+         left: 25px;
+         backdrop-filter: blur(10px);
+         border-radius: 16px;
+         color: orangered;
+         padding: 20px;
 
-        .text {
-            position: absolute;
-            top: 40%;
-            left: 25px;
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            color: orangered;
-            padding: 20px;
+         h1 {
+            font-size: 20px;
+         }
 
-            h1 {
-                font-size: 20px;
-            }
-
-            a {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                font-size: 14px;
-                margin-top: 10px;
-                transition: .3s ease-in;
-            }
-
-            a:hover {
-                color: var(--darkRed);
-            }
-        }
-    }
-
-    .parts {
-        display: none;
-
-
-        @media (min-width: 768px) {
+         a {
             display: flex;
-            flex-direction: row;
-            // overflow-x: scroll;
             align-items: center;
-            gap: 30px;
-        }
-    }
+            gap: 5px;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: 0.3s ease-in;
+         }
+
+         a:hover {
+            color: var(--darkRed);
+         }
+      }
+   }
+
+   .parts {
+      display: none;
+
+      @media (min-width: 768px) {
+         display: flex;
+         flex-direction: row;
+         // overflow-x: scroll;
+         align-items: center;
+         gap: 30px;
+      }
+   }
 }
