@@ -7,16 +7,11 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Select, Spinner } from "@chakra-ui/react";
 import { Car, GlobalState } from "../../interface";
 import { userActions } from "../../store/user-slice";
-import { carsActions } from "../../store/cars-slice";
 import { AiFillDelete } from "react-icons/ai";
+import axios from "axios";
 
 type SelectCarProps = {
 	cars: Car[];
-};
-
-type addVehicleData = {
-	username: string;
-	car_id: number;
 };
 
 type selectedCar = {
@@ -70,6 +65,8 @@ function SelectCar({ cars }: SelectCarProps) {
 		bodyTypes: [],
 		series: [],
 	});
+	// const [deleteCarId, setDeleteCarId] = useState<number>()
+	let deleteCarId: number;
 
 	const fetchUserVehicles = async (username: string) => {
 		const response = await fetch(
@@ -134,7 +131,33 @@ function SelectCar({ cars }: SelectCarProps) {
 		}
 	);
 
-	const removeUserVehicle = useMutation(async () => {});
+	const removeUserVehicleMutation = useMutation(
+		async () => {
+			console.log("id: ", deleteCarId);
+			const data = {
+				username: user.username,
+				car_id: deleteCarId,
+			};
+
+			const response = await axios.post(
+				"http://localhost:8000/api/user/vehicles/remove",
+				data,
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+
+			return response.data;
+		},
+		{
+			onSuccess: () => {
+				console.log("vehicle removed");
+            dispatch(userActions.removeCar({carId: deleteCarId}))
+			},
+		}
+	);
 
 	const handleSetSelectedCar = (data: selectedCar) => {
 		if (data.make) {
@@ -330,7 +353,7 @@ function SelectCar({ cars }: SelectCarProps) {
 		{ refetchOnWindowFocus: false }
 	);
 
-   const userVehicles: Car[] = useSelector(
+	const userVehicles: Car[] = useSelector(
 		(state: GlobalState) => state.user.user.cars
 	);
 
@@ -341,7 +364,7 @@ function SelectCar({ cars }: SelectCarProps) {
 				isSelected: false,
 			}));
 
-         cars.forEach((car) => dispatch(userActions.addCar(car)))
+			cars.forEach((car) => dispatch(userActions.addCar(car)));
 		}
 	}, [vehicles, isSuccess]);
 
@@ -357,8 +380,6 @@ function SelectCar({ cars }: SelectCarProps) {
 			setSelectionComplete(false);
 		}
 	}, [selectionComplete, selectedCar]);
-
-	
 
 	return (
 		<div className="select-car">
@@ -383,7 +404,13 @@ function SelectCar({ cars }: SelectCarProps) {
 							<p>{car.model}</p>
 							<p>{car.year}</p>
 							<p>{car.engine}</p>
-							<button className="delete">
+							<button
+								className="delete"
+								onClick={() => {
+									deleteCarId = car.id;
+									removeUserVehicleMutation.mutate();
+								}}
+							>
 								<AiFillDelete />
 							</button>
 						</div>

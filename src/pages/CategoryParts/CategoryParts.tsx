@@ -87,9 +87,13 @@ export default function CategoryParts() {
 					</p>
 				) : null}
 			</div>
-			{parts.length <= 0 && <div className="parts">
-				<p className="no-parts">Sorry, we have no {categoryName} parts for your vehicle.</p>
-				</div>}
+			{parts.length <= 0 && (
+				<div className="parts">
+					<p className="no-parts">
+						Sorry, we have no {categoryName} parts for your vehicle.
+					</p>
+				</div>
+			)}
 			<div className="parts">
 				{parts.map((part: PartShape, index: number) => (
 					<Part part={part} />
