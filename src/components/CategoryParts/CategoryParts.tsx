@@ -18,7 +18,6 @@ import Footer from "../Footer/Footer";
 export default function CategoryParts() {
    const location = useLocation();
    const categoryName = location.state.categoryName;
-   const isAuth = useSelector((state: GlobalState) => state.user.isAuth);
    const cars = useSelector((state: GlobalState) => state.cars.cars);
    const { isOpen, onOpen, onClose } = useDisclosure();
 

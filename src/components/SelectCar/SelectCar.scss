@@ -1,85 +1,91 @@
+/** @format */
+
 .select-car {
-    background: black;
-    color: orangered;
-    padding: 20px 10px;
+   background: black;
+   color: orangered;
+   padding: 20px 10px;
 
-    @media (min-width: 768px) {
-        padding: 50px 70px;
-    }
+   @media (min-width: 768px) {
+      padding: 50px 70px;
+   }
 
-    .heading {
-        font-size: 20px;
-        text-decoration: underline;
-        text-transform: uppercase;
-    }
+   .heading {
+      font-size: 20px;
+      text-decoration: underline;
+      text-transform: uppercase;
+   }
 
-    .your-car {
-        padding: 20px 0;
-        display: flex;
-        gap: 10px;
-        align-items: center;
+   .cars-loading {
+      margin: 20px 0;
+   }
 
-        .car {
+   .your-cars {
+      padding: 20px 0;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+
+      .car {
+         display: flex;
+         gap: 10px;
+      }
+   }
+
+   .new-car {
+      .selected-car {
+         h1 {
+            color: var(--darkRed);
+            font-weight: 500;
+            margin-bottom: 10px;
+         }
+
+         div {
             display: flex;
             gap: 10px;
-        }
-    }
-
-    .new-car {
-        .selected-car {
-            h1 {
-                color: var(--darkRed);
-                font-weight: 500;
-                margin-bottom: 10px;
-            }
-
-            div {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 20px;
-                color: white;
-
-                .submit {
-                    button {
-                        background: var(--darkRed);
-                        color: white;
-                        padding: 1px 10px;
-                    }
-
-                    button:hover {
-                        border: 1px solid orangered;
-                    }
-                }
-            }
-        }
-
-        .spec {
             margin-bottom: 20px;
-            .category-heading {
-                text-transform: uppercase;
-                color: var(--darkRed);
-                margin-bottom: 5px;
-            }
-
-            @media (min-width: 768px) {
-                width: 50%;
-            }
-        }
-    }
-
-    .choices {
-        display: flex;
-        gap: 10px;
-        margin-left: 10px;
-
-        .choice {
-            cursor: pointer;
-        }
-
-        .selected {
             color: white;
-            margin: 0;
-            padding: 0;
-        }
-    }
+
+            .submit {
+               button {
+                  background: var(--darkRed);
+                  color: white;
+                  padding: 1px 10px;
+               }
+
+               button:hover {
+                  border: 1px solid orangered;
+               }
+            }
+         }
+      }
+
+      .spec {
+         margin-bottom: 20px;
+         .category-heading {
+            text-transform: uppercase;
+            color: var(--darkRed);
+            margin-bottom: 5px;
+         }
+
+         @media (min-width: 768px) {
+            width: 50%;
+         }
+      }
+   }
+
+   .choices {
+      display: flex;
+      gap: 10px;
+      margin-left: 10px;
+
+      .choice {
+         cursor: pointer;
+      }
+
+      .selected {
+         color: white;
+         margin: 0;
+         padding: 0;
+      }
+   }
 }

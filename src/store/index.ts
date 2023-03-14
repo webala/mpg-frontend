@@ -7,7 +7,6 @@ import cartSlice, { initialCartState } from "./cart-slice";
 import { persistReducer, persistStore, createMigrate } from "redux-persist";
 import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage";
-import { GlobalState } from "../interface";
 
 const migrations = {
    0: (state: any) => {

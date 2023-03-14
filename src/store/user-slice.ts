@@ -1,25 +1,52 @@
-import { createSlice } from "@reduxjs/toolkit";
+/** @format */
 
-const initialState = {
-   user: {},
-   isAuth: false
-}
+import { createSlice } from "@reduxjs/toolkit";
+import { UserState } from "../interface";
+
+const initialState: UserState = {
+   user: {
+      cars: [],
+      groups: [],
+   },
+   isAuth: false,
+};
 
 const userSlice = createSlice({
-   name: 'user',
+   name: "user",
    initialState,
    reducers: {
       login(state, action) {
-         state.user = action.payload
-         state.isAuth = true
+         state.user = action.payload;
+         state.isAuth = true;
       },
       logout(state) {
-         state.user = {}
-         state.isAuth = false
-      }
-   }
-})
+         state.user = initialState.user;
+         state.isAuth = false;
+      },
+      addCars(state, action) {
+         const cars = action.payload;
+         state.user.cars = cars
+      },
+      selectCar(state, action) {
+         state.user.cars.forEach((car) => {
+            car.isSelected = false;
+         });
+         const carId = action.payload.carId;
+         const exists = state.user.cars.find((car) => car.carId === carId);
+         if (exists) {
+            exists.isSelected = true;
+         }
+      },
+      removeCar(state, action) {
+         const carId = action.payload.carId;
+         const exists = state.user.cars.find((car) => car.carId === carId);
+         if (exists) {
+            const index = state.user.cars.indexOf(exists);
+            state.user.cars.splice(index, 1);
+         }
+      },
+   },
+});
 
-export const userActions = userSlice.actions
-export default userSlice
-
+export const userActions = userSlice.actions;
+export default userSlice;

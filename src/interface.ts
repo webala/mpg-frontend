@@ -1,10 +1,16 @@
 /** @format */
 
+export type UserCars = {
+   carId: number;
+   isSelected: boolean;
+};
+
 export type User = {
    username?: string;
    id?: number;
    email?: string;
    groups: string[];
+   cars: UserCars[];
 };
 
 export type UserState = {
