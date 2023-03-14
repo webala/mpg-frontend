@@ -42,8 +42,6 @@ function SelectCar({ cars }: SelectCarProps) {
 	const user = useSelector((state: GlobalState) => state.user.user);
 	const dispatch = useDispatch();
 
-	const [submitData, setSubmitData] = useState<addVehicleData>();
-
 	if (!isAuth) {
 		return (
 			<div className="select-car ">
@@ -54,7 +52,7 @@ function SelectCar({ cars }: SelectCarProps) {
 			</div>
 		);
 	}
-	// const [userVehicles, setUserVehicles] = useState<Car[]>([])
+
 	const [selectedCar, setSelectedCar] = useState<selectedCar>({
 		make: "",
 		engine: "",
@@ -89,6 +87,19 @@ function SelectCar({ cars }: SelectCarProps) {
 
 	const addUserVehicleMutation = useMutation(
 		async () => {
+			const car = cars.find(
+				(car) =>
+					car.make === selectedCar.make &&
+					car.model == selectedCar.model &&
+					car.engine === selectedCar.engine &&
+					car.year === selectedCar.year &&
+					car.series === selectedCar.series
+			);
+
+			const data = {
+				username: user.username,
+				car_id: car?.id,
+			};
 			const response = await fetch(
 				"http://localhost:8000/api/user/vehicles/add",
 				{
@@ -96,7 +107,7 @@ function SelectCar({ cars }: SelectCarProps) {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(submitData),
+					body: JSON.stringify(data),
 				}
 			);
 
@@ -105,36 +116,25 @@ function SelectCar({ cars }: SelectCarProps) {
 			}
 
 			const jsonRes = await response.json();
-			console.log("response: ", jsonRes);
 			return jsonRes;
 		},
 		{
 			onSuccess: () => {
 				console.log("vehicle added successfully");
 				queryClient.invalidateQueries(["userVehicles", user.username]);
+				setOptions({
+					makes: [...new Set(cars.map((car) => car.make))],
+					models: [],
+					engines: [],
+					years: [],
+					bodyTypes: [],
+					series: [],
+				});
 			},
 		}
 	);
 
 	const removeUserVehicle = useMutation(async () => {});
-
-	const handleSubmitCar = () => {
-		const car = cars.find(
-			(car) =>
-				car.make === selectedCar.make &&
-				car.model == selectedCar.model &&
-				car.engine === selectedCar.engine &&
-				car.year === selectedCar.year &&
-				car.series === selectedCar.series
-		);
-
-		const data = {
-			username: user.username,
-			car_id: car?.id,
-		};
-		setSubmitData(data as addVehicleData);
-		addUserVehicleMutation.mutate();
-	};
 
 	const handleSetSelectedCar = (data: selectedCar) => {
 		if (data.make) {
@@ -330,13 +330,18 @@ function SelectCar({ cars }: SelectCarProps) {
 		{ refetchOnWindowFocus: false }
 	);
 
+   const userVehicles: Car[] = useSelector(
+		(state: GlobalState) => state.user.user.cars
+	);
+
 	useEffect(() => {
 		if (isSuccess) {
 			const cars: Car[] = vehicles.map((car: Car) => ({
 				...car,
 				isSelected: false,
 			}));
-			dispatch(userActions.addCars(cars));
+
+         cars.forEach((car) => dispatch(userActions.addCar(car)))
 		}
 	}, [vehicles, isSuccess]);
 
@@ -353,9 +358,7 @@ function SelectCar({ cars }: SelectCarProps) {
 		}
 	}, [selectionComplete, selectedCar]);
 
-	const userVehicles: Car[] = useSelector(
-		(state: GlobalState) => state.user.user.cars
-	);
+	
 
 	return (
 		<div className="select-car">
@@ -421,7 +424,9 @@ function SelectCar({ cars }: SelectCarProps) {
 
 						{selectionComplete ? (
 							<div className="submit">
-								<button onClick={handleSubmitCar}>Select this car</button>
+								<button onClick={() => addUserVehicleMutation.mutate()}>
+									Select this car
+								</button>
 							</div>
 						) : null}
 					</div>

@@ -27,6 +27,13 @@ const userSlice = createSlice({
          const cars = action.payload;
          state.user.cars = cars
       },
+      addCar(state, action) {
+         const newCar = action.payload
+         const exists = state.user.cars.find((car) => car.id === newCar.id);
+         if (!exists) {
+            state.user.cars.push(newCar)
+         }
+      },
       selectCar(state, action) {
          state.user.cars.forEach((car) => {
             car.isSelected = false;
