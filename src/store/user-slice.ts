@@ -32,7 +32,7 @@ const userSlice = createSlice({
             car.isSelected = false;
          });
          const carId = action.payload.carId;
-         const exists = state.user.cars.find((car) => car.carId === carId);
+         const exists = state.user.cars.find((car) => car.id === carId);
          if (exists) {
             exists.isSelected = true;
          }

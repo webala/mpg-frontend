@@ -38,6 +38,7 @@ function Footer() {
             <a href="#">About MPG</a>
             <a href="#">Terms of service</a>
             <a href="#">Refund policy</a>
+            <a href="#">Return policy</a>
          </div>
          <div className="form">
             <h1>

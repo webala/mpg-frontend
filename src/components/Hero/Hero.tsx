@@ -3,8 +3,8 @@ import Navbar from "../Navbar/Navbar";
 import "./Hero.scss";
 
 type HeroProps = {
-	onOpen: Function
-}
+	onOpen: () => void;
+};
 
 function Hero({ onOpen }: HeroProps) {
 	return (

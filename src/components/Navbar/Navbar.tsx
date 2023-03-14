@@ -21,9 +21,9 @@ function Navbar({ onOpen }: { onOpen: () => void }) {
    return (
       <div className="navbar">
          <div className="top">
-            <div className="logo">
+            <a href="/" className="logo">
                <img src={logo} alt="logo" />
-            </div>
+            </a>
             <div className="links">
                {isAuth ? (
                   <a href="#">Sign out</a>

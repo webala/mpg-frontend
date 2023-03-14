@@ -28,6 +28,17 @@
       .car {
          display: flex;
          gap: 10px;
+         flex-wrap: wrap;
+         margin-bottom: 10px;
+         cursor: pointer;
+         padding: 5px;
+         width: fit-content;
+         transition: border  .3s ease-in;
+      }
+
+      .car.selected {
+         border: 1px solid orangered;
+         border-radius: 5px;
       }
    }
 

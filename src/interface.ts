@@ -1,16 +1,12 @@
 /** @format */
 
-export type UserCars = {
-   carId: number;
-   isSelected: boolean;
-};
 
 export type User = {
    username?: string;
    id?: number;
    email?: string;
    groups: string[];
-   cars: UserCars[];
+   cars: Car[];
 };
 
 export type UserState = {
@@ -26,6 +22,7 @@ export type Car = {
    model: string;
    series: string;
    year: string;
+   isSelected?: boolean;
 };
 
 export type CarState = {

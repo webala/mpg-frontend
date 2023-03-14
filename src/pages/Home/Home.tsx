@@ -51,7 +51,7 @@ function Home() {
 	return (
 		<div>
 			<Hero onOpen={onOpen} />
-			{isAuth && isRetailer >= 0 ? <AdminActions /> : null}
+			{/* {isAuth && isRetailer >= 0 ? <AdminActions /> : null} */}
 			<SelectCar cars={cars} />
 			<Parts setCart={setCart} />
 			<Cart setCart={setCart} cart={cart} isOpen={isOpen} onClose={onClose} />
