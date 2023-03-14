@@ -1,0 +1,50 @@
+/** @format */
+
+.category-parts {
+   background: black;
+   color: white;
+
+   .navbar {
+      color: black;
+   }
+
+   .title {
+      padding: 20px 10px;
+      h1 {
+         color: var(--darkRed);
+         font-size: 20px;
+         font-weight: 700;
+
+         @media (min-width: 768px) {
+            font-size: 24px;
+         }
+      }
+
+      a {
+         color: orangered;
+         cursor: pointer;
+         transition: 0.3s ease-in;
+      }
+
+      a:hover {
+         color: var(--darkRed);
+      }
+
+      p {
+         text-transform: capitalize;
+      }
+
+      @media (min-width: 768px) {
+         padding: 20px 70px;
+      }
+   }
+
+   .parts {
+      .no-parts {
+         color: var(--darkRed);
+      }
+      .part {
+         color: black;
+      }
+   }
+}

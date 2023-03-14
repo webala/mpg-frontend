@@ -39,7 +39,7 @@ const userSlice = createSlice({
       },
       removeCar(state, action) {
          const carId = action.payload.carId;
-         const exists = state.user.cars.find((car) => car.carId === carId);
+         const exists = state.user.cars.find((car) => car.id === carId);
          if (exists) {
             const index = state.user.cars.indexOf(exists);
             state.user.cars.splice(index, 1);

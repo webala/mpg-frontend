@@ -12,45 +12,45 @@ import Home from "./pages/Home/Home";
 import Payment from "./pages/Payment/Payment";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
-import CategoryParts from "./components/CategoryParts/CategoryParts";
+import CategoryParts from "./pages/CategoryParts/CategoryParts";
 
 const router = createBrowserRouter([
-   {
-      path: "/",
-      element: <Home />,
-   },
-   {
-      path: "/dashboard",
-      element: <Dashboard />,
-   },
-   {
-      path: "/payment",
-      element: <Payment />,
-   },
-   {
-      path: "/login",
-      element: <Login />,
-   },
-   {
-      path: "/register",
-      element: <Register />,
-   },
-   {
-      path: "/parts",
-      element: <CategoryParts />,
-   },
+	{
+		path: "/",
+		element: <Home />,
+	},
+	{
+		path: "/dashboard",
+		element: <Dashboard />,
+	},
+	{
+		path: "/payment",
+		element: <Payment />,
+	},
+	{
+		path: "/login",
+		element: <Login />,
+	},
+	{
+		path: "/register",
+		element: <Register />,
+	},
+	{
+		path: "/parts",
+		element: <CategoryParts />,
+	},
 ]);
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-   <React.StrictMode>
-      <Provider store={store}>
-         <QueryClientProvider client={queryClient}>
-            <ChakraProvider>
-               <RouterProvider router={router} />
-            </ChakraProvider>
-         </QueryClientProvider>
-      </Provider>
-   </React.StrictMode>
+	<React.StrictMode>
+		<Provider store={store}>
+			<QueryClientProvider client={queryClient}>
+				<ChakraProvider>
+					<RouterProvider router={router} />
+				</ChakraProvider>
+			</QueryClientProvider>
+		</Provider>
+	</React.StrictMode>
 );

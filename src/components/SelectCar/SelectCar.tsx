@@ -8,6 +8,7 @@ import { Select, Spinner } from "@chakra-ui/react";
 import { Car, GlobalState } from "../../interface";
 import { userActions } from "../../store/user-slice";
 import { carsActions } from "../../store/cars-slice";
+import { AiFillDelete } from "react-icons/ai";
 
 type SelectCarProps = {
 	cars: Car[];
@@ -25,6 +26,15 @@ type selectedCar = {
 	year?: string;
 	series?: string;
 	body_type?: string;
+};
+
+type Options = {
+	makes: string[];
+	models: string[];
+	engines: string[];
+	years: string[];
+	series: string[];
+	bodyTypes: string[];
 };
 
 function SelectCar({ cars }: SelectCarProps) {
@@ -54,14 +64,14 @@ function SelectCar({ cars }: SelectCarProps) {
 		body_type: "",
 	});
 	const [selectionComplete, setSelectionComplete] = useState<boolean>(false);
-	const [makes, setMakes] = useState(
-		Array.from(new Set(cars.map((car) => car.make)))
-	);
-	const [series, setSeries] = useState<string[]>([]);
-	const [models, setModels] = useState<string[]>([]);
-	const [years, setYears] = useState<string[]>([]);
-	const [engins, setEngins] = useState<string[]>([]);
-	const [bodyTypes, setBodyTypes] = useState<string[]>([]);
+	const [options, setOptions] = useState<Options>({
+		makes: [...new Set(cars.map((car) => car.make))],
+		models: [],
+		engines: [],
+		years: [],
+		bodyTypes: [],
+		series: [],
+	});
 
 	const fetchUserVehicles = async (username: string) => {
 		const response = await fetch(
@@ -102,32 +112,11 @@ function SelectCar({ cars }: SelectCarProps) {
 			onSuccess: () => {
 				console.log("vehicle added successfully");
 				queryClient.invalidateQueries(["userVehicles", user.username]);
-				// setSelectedCar({
-				//    make: "",
-				//    engine: "",
-				//    series: "",
-				//    year: "",
-				//    model: "",
-				//    body_type: "",
-				// });
 			},
 		}
 	);
 
-	useEffect(() => {
-		if (
-			selectedCar.model &&
-			selectedCar.series &&
-			selectedCar.engine &&
-			selectedCar.year &&
-			selectedCar.make &&
-			selectedCar.body_type
-		) {
-			setSelectionComplete(true);
-		} else {
-			setSelectionComplete(false);
-		}
-	}, [selectionComplete, selectedCar]);
+	const removeUserVehicle = useMutation(async () => {});
 
 	const handleSubmitCar = () => {
 		const car = cars.find(
@@ -148,7 +137,6 @@ function SelectCar({ cars }: SelectCarProps) {
 	};
 
 	const handleSetSelectedCar = (data: selectedCar) => {
-		console.log("data: ", data);
 		if (data.make) {
 			setSelectedCar((car) => ({
 				...car,
@@ -160,19 +148,37 @@ function SelectCar({ cars }: SelectCarProps) {
 				body_type: "",
 			}));
 
-			const availableVehicles = [
-				...new Set(cars.filter((car) => car.make === data.make)),
+			let availableVehicles = [
+				...new Set(cars.filter((car) => car.make === data.make && car.series)),
 			];
 
-			const availableSeries = availableVehicles.map(
-				(vehicle) => vehicle.series
-			);
+			if (availableVehicles.length <= 0) {
+				availableVehicles = [
+					...new Set(cars.filter((car) => car.make === data.make)),
+				];
+				const availableModels = availableVehicles.map((car) => car.model);
+				setOptions((prevOptions: Options) => ({
+					...prevOptions,
+					series: [],
+					models: availableModels,
+					years: [],
+					engines: [],
+					bodyTypes: [],
+				}));
+			} else {
+				const availableSeries = availableVehicles.map(
+					(vehicle) => vehicle.series
+				);
 
-			setSeries(availableSeries as string[]);
-			setModels([]);
-			setYears([]);
-			setEngins([]);
-			setBodyTypes([]);
+				setOptions((prevOptions: Options) => ({
+					...prevOptions,
+					series: availableSeries,
+					models: [],
+					years: [],
+					engines: [],
+					bodyTypes: [],
+				}));
+			}
 		} else if (data.series) {
 			setSelectedCar((car) => ({
 				...car,
@@ -182,8 +188,7 @@ function SelectCar({ cars }: SelectCarProps) {
 				engine: "",
 				body_type: "",
 			}));
-			console.log("selectedCar", selectedCar);
-			const availableCars = [
+			let availableCars = [
 				...new Set(
 					cars.filter((car) => {
 						if (
@@ -198,29 +203,45 @@ function SelectCar({ cars }: SelectCarProps) {
 			];
 
 			const availableModels = availableCars.map((car) => car.model);
-			console.log("available models: ", availableModels);
-
 			if (availableModels.length <= 0) {
-				handleSetSelectedCar({ model: "" });
-				console.log("series after recursion: ", selectedCar.series);
+				availableCars = [
+					...new Set(
+						cars.filter((car) => {
+							if (car.series === data.series && car.make === selectedCar.make) {
+								return car;
+							}
+						})
+					),
+				];
+				const availableYears = availableCars.map((car) => car.year);
+				console.log("available years", availableYears);
+				setOptions((prevOptions: Options) => ({
+					...prevOptions,
+					models: [],
+					years: availableYears,
+					engines: [],
+					bodyTypes: [],
+				}));
+			} else {
+				setOptions((prevOptions: Options) => ({
+					...prevOptions,
+					models: availableModels,
+					years: [],
+					engines: [],
+					bodyTypes: [],
+				}));
 			}
-
-			setModels(availableModels as string[]);
-			setYears([]);
-			setEngins([]);
-			setBodyTypes([]);
 		} else if (data.hasOwnProperty("model")) {
-			console.log("its data model");
+			setSelectedCar((car) => ({
+				...car,
+				model: data.model,
+				year: "",
+				engine: "",
+				body_type: "",
+			}));
 			const availableCars = [
 				...new Set(
 					cars.filter((car) => {
-						console.log(
-							"model: ",
-							car.series,
-							selectedCar.series,
-							"is equal: ",
-							car.series === selectedCar.series
-						);
 						if (
 							car.model === data.model &&
 							car.make === selectedCar.make &&
@@ -231,20 +252,20 @@ function SelectCar({ cars }: SelectCarProps) {
 					})
 				),
 			];
-			console.log("available years: ", availableCars);
-
 			const availableYears = availableCars.map((car) => car.year);
-			setYears(availableYears as string[]);
-			setEngins([]);
-			setBodyTypes([]);
+			setOptions((prevOptions: Options) => ({
+				...prevOptions,
+				years: availableYears,
+				engines: [],
+				bodyTypes: [],
+			}));
+		} else if (data.year) {
 			setSelectedCar((car) => ({
 				...car,
-				model: data.model,
-				year: "",
+				year: data.year,
 				engine: "",
 				body_type: "",
 			}));
-		} else if (data.year) {
 			const availableCars = Array.from(
 				new Set(
 					cars.filter((car) => {
@@ -259,16 +280,12 @@ function SelectCar({ cars }: SelectCarProps) {
 					})
 				)
 			);
+			const availableEngines = availableCars.map((car) => car.engine);
 
-			const availableEngins = availableCars.map((car) => car.engine);
-
-			setEngins(availableEngins as string[]);
-			setBodyTypes([]);
-			setSelectedCar((car) => ({
-				...car,
-				year: data.year,
-				engine: "",
-				body_type: "",
+			setOptions((prevOptions: Options) => ({
+				...prevOptions,
+				engines: availableEngines,
+				bodyTypes: [],
 			}));
 		} else if (data.engine) {
 			setSelectedCar((car) => ({
@@ -293,7 +310,10 @@ function SelectCar({ cars }: SelectCarProps) {
 			);
 
 			const availableBodyTypes = availableCars.map((car) => car.body_type);
-			setBodyTypes(availableBodyTypes as string[]);
+			setOptions((prevOptions: Options) => ({
+				...prevOptions,
+				bodyTypes: availableBodyTypes,
+			}));
 		} else if (data.body_type) {
 			setSelectedCar((car) => ({ ...car, body_type: data.body_type }));
 		}
@@ -320,6 +340,19 @@ function SelectCar({ cars }: SelectCarProps) {
 		}
 	}, [vehicles, isSuccess]);
 
+	useEffect(() => {
+		if (
+			selectedCar.engine &&
+			selectedCar.year &&
+			selectedCar.make &&
+			selectedCar.body_type
+		) {
+			setSelectionComplete(true);
+		} else {
+			setSelectionComplete(false);
+		}
+	}, [selectionComplete, selectedCar]);
+
 	const userVehicles: Car[] = useSelector(
 		(state: GlobalState) => state.user.user.cars
 	);
@@ -327,24 +360,33 @@ function SelectCar({ cars }: SelectCarProps) {
 	return (
 		<div className="select-car">
 			<h1 className="heading">Your vehicles</h1>
-			{isSuccess && (
+			{userVehicles && userVehicles.length > 0 ? (
+				<p className="instruction">
+					Click on one of your vehicles to see its available parts
+				</p>
+			) : null}
+			{isSuccess && userVehicles ? (
 				<div className="your-cars">
-					{userVehicles.map((car: Car) => (
+					{userVehicles.map((car: Car, index: number) => (
 						<div
 							className={car.isSelected ? "car selected" : "car"}
 							onClick={() => {
 								dispatch(userActions.selectCar({ carId: car.id }));
 							}}
+							key={index}
 						>
 							<p>{car.make}</p>
 							<p>{car.series}</p>
 							<p>{car.model}</p>
 							<p>{car.year}</p>
 							<p>{car.engine}</p>
+							<button className="delete">
+								<AiFillDelete />
+							</button>
 						</div>
 					))}
 				</div>
-			)}
+			) : null}
 
 			{isLoading && (
 				<p className="cars-loading">
@@ -384,12 +426,12 @@ function SelectCar({ cars }: SelectCarProps) {
 						) : null}
 					</div>
 				</div>
-				{makes && (
+				{options.makes && (
 					<div className="spec">
 						<h1 className="category-heading">Make</h1>
 						<div className="makes choices">
 							<Select placeholder="Make">
-								{makes.map((make, index) => (
+								{options.makes.map((make, index) => (
 									<option
 										className={
 											selectedCar.make === make ? "choice selected" : "choice"
@@ -404,12 +446,12 @@ function SelectCar({ cars }: SelectCarProps) {
 						</div>
 					</div>
 				)}
-				{series.length > 0 ? (
+				{options.series.length > 0 ? (
 					<div className="spec">
 						<h1 className="category-heading">Series</h1>
 						<div className="choices">
 							<Select placeholder="Series">
-								{series.map((series, index) => (
+								{options.series.map((series, index) => (
 									<option
 										className={
 											selectedCar.series === series
@@ -427,12 +469,12 @@ function SelectCar({ cars }: SelectCarProps) {
 					</div>
 				) : null}
 
-				{models.length > 0 ? (
+				{options.models.length > 0 ? (
 					<div className="spec">
 						<h1 className="category-heading">Model</h1>
 						<div className="choices">
 							<Select placeholder="Model">
-								{models.map((model, index) => (
+								{options.models.map((model, index) => (
 									<option
 										className={
 											selectedCar.model === model ? "choice selected" : "choice"
@@ -447,12 +489,12 @@ function SelectCar({ cars }: SelectCarProps) {
 						</div>
 					</div>
 				) : null}
-				{years.length > 0 ? (
+				{options.years.length > 0 ? (
 					<div className="spec">
 						<h1 className="category-heading">Year</h1>
 						<div className="choices">
 							<Select placeholder="Year">
-								{years.map((year, index) => (
+								{options.years.map((year, index) => (
 									<option
 										className={
 											selectedCar.year === year ? "choice selected" : "choice"
@@ -467,12 +509,12 @@ function SelectCar({ cars }: SelectCarProps) {
 						</div>
 					</div>
 				) : null}
-				{engins.length > 0 ? (
+				{options.engines.length > 0 ? (
 					<div className="spec">
 						<h1 className="category-heading">Engine</h1>
 						<div className="choices">
 							<Select placeholder="Engine">
-								{engins.map((engine, index) => (
+								{options.engines.map((engine, index) => (
 									<option
 										className={
 											selectedCar.engine === engine
@@ -489,12 +531,12 @@ function SelectCar({ cars }: SelectCarProps) {
 						</div>
 					</div>
 				) : null}
-				{bodyTypes.length > 0 ? (
+				{options.bodyTypes.length > 0 ? (
 					<div className="spec">
 						<h1 className="category-heading">Body type</h1>
 						<div className="choices">
 							<Select placeholder="Body type">
-								{bodyTypes.map((bodyType, index) => (
+								{options.bodyTypes.map((bodyType, index) => (
 									<option
 										className={
 											selectedCar.body_type === bodyType

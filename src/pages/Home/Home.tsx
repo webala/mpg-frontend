@@ -47,7 +47,6 @@ function Home() {
 	}
 
 	dispatch(carsActions.serCars(cars));
-	console.log("cars: ", cars);
 	return (
 		<div>
 			<Hero onOpen={onOpen} />
